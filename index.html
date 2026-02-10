@@ -53,7 +53,9 @@
     padding:18px 20px;border-bottom:1px solid #0b2a4a20;
   }
   .hero img{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.32;filter:saturate(.9) contrast(1.05);
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:.32;filter:saturate(.9) contrast(1.05);
+    pointer-events:none; /* não intercepta cliques */
   }
   .hero .badge{
     position:absolute;top:12px;left:12px;background:rgba(255,122,0,.95);color:#fff;padding:6px 10px;border-radius:999px;
@@ -85,11 +87,11 @@
   .scale label{
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     padding:12px 10px;border:1px solid var(--cinza-2);border-radius:10px;background:#fff;cursor:pointer;
-    user-select:none;font-weight:700;color:#334155;transition:all .15s ease;min-height:64px; /* altura mínima p/ respiro */
-    gap:6px; /* ✅ Espaçamento entre número e o texto (small) */
+    user-select:none;font-weight:700;color:#334155;transition:all .15s ease;min-height:64px;
+    gap:6px; /* ✅ Espaçamento entre número e o rótulo */
   }
   .scale label small{
-    position:static; /* ✅ Sem posição absoluta — melhora A11Y e spacing */
+    position:static; /* ✅ sem absolute — melhora leitura e espaçamento */
     font-weight:500;color:#64748b;font-size:.78rem;line-height:1.1;text-align:center
   }
   .scale input:checked + label{
@@ -141,7 +143,7 @@
   .cover-hero{
     position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
   }
-  .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
+  .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;pointer-events:none}
   .cover-title{position:relative}
   .cover-title h2{margin:0;font-size:1.8rem}
   .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5}
@@ -234,7 +236,7 @@ const objetivos = {
 };
 
 // Estado & Persistência
-const STORAGE_KEY = "missaoEmpreendedora_v2";
+const STORAGE_KEY = "missaoEmpreendedora_v3";
 let estado = {
   etapa: 'capa', // 'capa' | 'intro' | 'jogo' | 'feedback'
   atual: 0, // índice do cenário
@@ -254,7 +256,6 @@ function carregarEstado(){
     if(data.finalizado) estado.finalizado = true;
     if(data.diag) estado.diag = data.diag;
 
-    // Se já finalizado, vá direto ao feedback; senão, comece na capa
     if(estado.finalizado) estado.etapa = 'feedback';
     else if(!['capa','intro','jogo'].includes(estado.etapa)) estado.etapa = 'capa';
   }catch(e){}
@@ -268,7 +269,6 @@ carregarEstado();
    Renderização
    ============== */
 const root = document.getElementById("root");
-
 function $(sel, ctx=document){ return ctx.querySelector(sel); }
 
 function animateSwap(html){
@@ -309,15 +309,12 @@ function renderCapa(){
       <div class="footer">
         <div></div>
         <div>
-          <button class="btn" id="btn-comecar">Começar</button>
+          <button class="btn" id="btn-comecar" type="button">Começar</button>
         </div>
       </div>
     </section>
   `;
   animateSwap(html);
-  $("#btn-comecar").addEventListener("click", ()=>{
-    estado.etapa = 'intro'; salvarEstado(); renderIntro();
-  });
 }
 
 /* ====== INTRODUÇÃO ====== */
@@ -346,21 +343,15 @@ function renderIntro(){
       </div>
       <div class="footer">
         <div>
-          <button class="btn secondary" id="btn-voltar-capa">Voltar</button>
+          <button class="btn secondary" id="btn-voltar-capa" type="button">Voltar</button>
         </div>
         <div>
-          <button class="btn" id="btn-avancar-intro">Avançar</button>
+          <button class="btn" id="btn-avancar-intro" type="button">Avançar</button>
         </div>
       </div>
     </section>
   `;
   animateSwap(html);
-  $("#btn-voltar-capa").addEventListener("click", ()=>{
-    estado.etapa = 'capa'; salvarEstado(); renderCapa();
-  });
-  $("#btn-avancar-intro").addEventListener("click", ()=>{
-    estado.etapa = 'jogo'; estado.atual = 0; salvarEstado(); renderCenario(0);
-  });
 }
 
 /* ====== CENÁRIO ====== */
@@ -370,7 +361,7 @@ function renderCenario(idx){
   const html = `
     <article class="view-cenario">
       <div class="hero">
-        <img src="${c.imagem}" alt="Imagem ilustrativa de: ${c.titulo}">
+        <img src="${c.imagem}" alt="" />
         <span class="badge">${idx+1} / ${cenarios.length}</span>
         <h2>${c.titulo}</h2>
       </div>
@@ -396,30 +387,21 @@ function renderCenario(idx){
 
       <div class="footer">
         <div>
-          <button class="btn secondary" ${idx===0?"disabled":""} id="btn-voltar">
+          <button class="btn secondary" ${idx===0?"disabled":""} id="btn-voltar" type="button">
             ◀ Voltar
           </button>
         </div>
         <div>
-          <button class="btn secondary" id="btn-recomecar">Recomeçar</button>
+          <button class="btn secondary" id="btn-recomecar" type="button">Recomeçar</button>
           ${idx<cenarios.length-1
-            ? `<button class="btn avancar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-avancar">Avançar ▶</button>`
-            : `<button class="btn warn finalizar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-finalizar">Finalizar & Ver Feedback</button>`
+            ? `<button class="btn avancar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-avancar" type="button">Avançar ▶</button>`
+            : `<button class="btn warn finalizar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-finalizar" type="button">Finalizar & Ver Feedback</button>`
           }
         </div>
       </div>
     </article>
   `;
   animateSwap(html);
-
-  // footer actions
-  const btnVoltar = $("#btn-voltar");
-  if(btnVoltar) btnVoltar.addEventListener("click", onPrev);
-  $("#btn-recomecar").addEventListener("click", onReset);
-  const btnAvancar = $("#btn-avancar");
-  if(btnAvancar) btnAvancar.addEventListener("click", onNext);
-  const btnFinalizar = $("#btn-finalizar");
-  if(btnFinalizar) btnFinalizar.addEventListener("click", finalizar);
 }
 
 function renderAfirmativa(ci, ai, afirm, valor){
@@ -441,7 +423,7 @@ function renderAfirmativa(ci, ai, afirm, valor){
                      ${valor===v?"checked":""} />
               <label for="${groupName}_${v}">
                 <span>${v}</span>
-                <small>${legend[v].replace("Discordo ","Discordo ").replace("Concordo ","Concordo ")}</small>
+                <small>${legend[v]}</small>
               </label>
             </div>
           `).join("")}
@@ -455,7 +437,9 @@ function isCenarioCompleto(idx){
   return estado.respostas[idx].every(v=>typeof v==="number" && v>=1 && v<=5);
 }
 
-/* ====== EVENTOS (DELEGAÇÃO) — Corrige o bug a partir do cenário 2 ====== */
+/* ====== EVENTOS ====== */
+
+/* Marcação da escala (delegação) — corrige bug de cenários seguintes */
 root.addEventListener("change", (e)=>{
   const t = e.target;
   if(t && t.matches('input[type="radio"][data-ci][data-ai]')){
@@ -463,12 +447,10 @@ root.addEventListener("change", (e)=>{
     const ai = Number(t.getAttribute("data-ai"));
     const val = Number(t.value);
     if(!Number.isNaN(ci) && !Number.isNaN(ai) && !Number.isNaN(val)){
-      // Atualiza estado
       if(!estado.respostas[ci]) estado.respostas[ci] = [null,null,null];
       estado.respostas[ci][ai] = val;
       salvarEstado();
 
-      // Habilita botão de avanço, se o cenário atual estiver completo
       if(estado.etapa==='jogo' && ci===estado.atual){
         const btnAvancar = $("#btn-avancar");
         const btnFinalizar = $("#btn-finalizar");
@@ -476,6 +458,52 @@ root.addEventListener("change", (e)=>{
         if(btnFinalizar && isCenarioCompleto(ci)) btnFinalizar.disabled = false;
       }
     }
+  }
+});
+
+/* Cliques — delegação centralizada (robusta em re-renderizações) */
+root.addEventListener("click", (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  switch (btn.id) {
+    case "btn-comecar":
+      estado.etapa = "intro";
+      salvarEstado();
+      renderIntro();
+      break;
+
+    case "btn-voltar-capa":
+      estado.etapa = "capa";
+      salvarEstado();
+      renderCapa();
+      break;
+
+    case "btn-avancar-intro":
+      estado.etapa = "jogo";
+      estado.atual = 0;
+      salvarEstado();
+      renderCenario(0);
+      break;
+
+    case "btn-voltar":
+      onPrev();
+      break;
+
+    case "btn-recomecar":
+      onReset();
+      break;
+
+    case "btn-avancar":
+      onNext();
+      break;
+
+    case "btn-finalizar":
+      finalizar();
+      break;
+
+    default:
+      break;
   }
 });
 
@@ -598,7 +626,7 @@ function renderFeedback(){
   const html = `
     <section class="view-feedback">
       <div class="hero">
-        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="Relatório do jogo">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="" />
         <span class="badge">Relatório</span>
         <h2>📊 Relatório de Feedback do Jogo: Missão Empreendedora – Decida com Coragem</h2>
       </div>
@@ -646,11 +674,11 @@ function renderFeedback(){
 
       <div class="footer">
         <div>
-          <button class="btn secondary" onclick="window.print()">🖨 Imprimir / Salvar PDF</button>
-          <button class="btn secondary" onclick="baixarJSON()">⬇ Baixar resultados (.json)</button>
+          <button class="btn secondary" onclick="window.print()" type="button">🖨 Imprimir / Salvar PDF</button>
+          <button class="btn secondary" onclick="baixarJSON()" type="button">⬇ Baixar resultados (.json)</button>
         </div>
         <div>
-          <button class="btn" onclick="refazer()">🔁 Refazer</button>
+          <button class="btn" onclick="refazer()" type="button">🔁 Refazer</button>
         </div>
       </div>
     </section>
