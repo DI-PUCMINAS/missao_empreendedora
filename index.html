@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Missão Empreendedora – Decida com Coragem</title>
 <meta name="description" content="Jogo gamificado sobre comportamento empreendedor e soft skills." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='60' cy='60' r='56' fill='%230b2a4a'/%3E%3Cpath d='M35 65 L60 30 L85 65 L60 90 Z' fill='%23ff7a00'/%3E%3C/svg%3E">
 <style>
   :root{
     --azul:#0b2a4a;
@@ -50,7 +49,7 @@
     background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
   }
   .hero{
-    position:relative;height:200px;background:var(--azul-2);color:#fff;display:flex;align-items:end;
+    position:relative;height:220px;background:var(--azul-2);color:#fff;display:flex;align-items:end;
     padding:18px 20px;border-bottom:1px solid #0b2a4a20;
   }
   .hero img{
@@ -75,21 +74,35 @@
   .scale{
     display:grid;grid-template-columns:repeat(5,1fr);gap:8px;flex:1;min-width:260px
   }
-  .scale label{
-    display:grid;place-items:center;padding:10px;border:1px solid var(--cinza-2);border-radius:10px;background:#fff;cursor:pointer;
-    user-select:none;font-weight:600;color:#334155;position:relative;transition:all .15s ease
+
+  /* ======= ACESSIBILIDADE + ESPAÇAMENTO DA ESCALA ======= */
+  .scale input{
+    /* Mantém focável para leitores de tela, mas invisível visualmente */
+    position:absolute;
+    width:1px;height:1px;margin:-1px;padding:0;border:0;
+    clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap;
   }
-  .scale label small{position:absolute;bottom:6px;font-weight:500;color:#64748b;font-size:.7rem}
-  .scale input{display:none}
+  .scale label{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:12px 10px;border:1px solid var(--cinza-2);border-radius:10px;background:#fff;cursor:pointer;
+    user-select:none;font-weight:700;color:#334155;transition:all .15s ease;min-height:64px; /* altura mínima p/ respiro */
+    gap:6px; /* ✅ Espaçamento entre número e o texto (small) */
+  }
+  .scale label small{
+    position:static; /* ✅ Sem posição absoluta — melhora A11Y e spacing */
+    font-weight:500;color:#64748b;font-size:.78rem;line-height:1.1;text-align:center
+  }
   .scale input:checked + label{
     border-color:var(--laranja);background:linear-gradient(180deg,#fff 0%,#fff 35%,#fff0 100%), rgba(255,122,0,.08);
     box-shadow:0 0 0 3px rgba(255,122,0,.15) inset, 0 8px 18px rgba(255,122,0,.08);
     color:#0b2a4a
   }
-  .legenda{font-size:.85rem;color:#475569;display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
-  .progress{
-    margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden
+  .scale input:focus-visible + label{
+    outline:3px solid #ffb56b; outline-offset:2px; /* foco visível */
   }
+
+  .legenda{font-size:.85rem;color:#475569;display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
+  .progress{ margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
   .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--laranja),#ff9d40);transition:width .4s ease}
   .footer{
     display:flex;justify-content:space-between;gap:10px;padding:14px;background:#fff;border-top:1px solid #e5e7eb;border-radius:0 0 var(--radius) var(--radius)
@@ -106,17 +119,13 @@
   .fade-exit{opacity:1;transform:none}
   .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
   .feedback{padding:18px}
-  .pill{
-    display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0
-  }
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0}
   .pill.ok{background:#ecfdf5;color:#065f46}
   .pill.mid{background:#fff7ed;color:#9a3412}
   .pill.low{background:#fef2f2;color:#7f1d1d}
   .grid{display:grid;grid-template-columns:1fr;gap:14px}
   @media (min-width:860px){ .grid{grid-template-columns:1.1fr .9fr} }
-  .box{
-    background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px
-  }
+  .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
   .checklist li{margin:8px 0}
   /* Impressão */
   @media print{
@@ -124,6 +133,21 @@
     body{background:#fff}
     .card{box-shadow:none;border:0}
   }
+
+  /* ===== CAPA & INTRO ===== */
+  .cover, .intro {
+    display:flex;flex-direction:column;gap:16px;padding:18px;background:#fff;
+  }
+  .cover-hero{
+    position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
+  }
+  .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
+  .cover-title{position:relative}
+  .cover-title h2{margin:0;font-size:1.8rem}
+  .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5}
+  .intro h3{margin:0 0 8px}
+  .intro p{margin:8px 0}
+  .intro ul{margin:8px 0 0 1.2rem}
 </style>
 </head>
 <body>
@@ -144,11 +168,8 @@
    Dados do jogo (Cenários)
    ========================= */
 
-const PALETA = {
-  azul: "#0b2a4a", laranja: "#ff7a00", branco: "#ffffff"
-};
+const PALETA = { azul:"#0b2a4a", laranja:"#ff7a00", branco:"#ffffff" };
 
-// 👉 Substitua as imagens pelos visuais oficiais da disciplina, se desejar.
 const cenarios = [
   {
     titulo: "Cenário 1: A Reunião Tensa",
@@ -213,8 +234,9 @@ const objetivos = {
 };
 
 // Estado & Persistência
-const STORAGE_KEY = "missaoEmpreendedora_v1";
+const STORAGE_KEY = "missaoEmpreendedora_v2";
 let estado = {
+  etapa: 'capa', // 'capa' | 'intro' | 'jogo' | 'feedback'
   atual: 0, // índice do cenário
   respostas: Array.from({length: cenarios.length}, () => [null, null, null]), // 5x3
   finalizado: false,
@@ -228,8 +250,13 @@ function carregarEstado(){
     const data = JSON.parse(raw);
     if(Array.isArray(data.respostas)) estado.respostas = data.respostas;
     if(typeof data.atual === "number") estado.atual = Math.min(Math.max(0,data.atual), cenarios.length-1);
+    if(typeof data.etapa === "string") estado.etapa = data.etapa;
     if(data.finalizado) estado.finalizado = true;
     if(data.diag) estado.diag = data.diag;
+
+    // Se já finalizado, vá direto ao feedback; senão, comece na capa
+    if(estado.finalizado) estado.etapa = 'feedback';
+    else if(!['capa','intro','jogo'].includes(estado.etapa)) estado.etapa = 'capa';
   }catch(e){}
 }
 function salvarEstado(){
@@ -243,7 +270,6 @@ carregarEstado();
 const root = document.getElementById("root");
 
 function $(sel, ctx=document){ return ctx.querySelector(sel); }
-function $all(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
 
 function animateSwap(html){
   const node = document.createElement("div");
@@ -254,7 +280,7 @@ function animateSwap(html){
     requestAnimationFrame(()=>next.classList.add("fade-enter-active"));
     return;
   }
-  const current = root.firstElementChild;
+  const current = root.firstChild;
   current.classList.add("fade-exit-active");
   setTimeout(()=>{
     root.replaceChildren(next);
@@ -266,14 +292,85 @@ function animateSwap(html){
   }, 200);
 }
 
+/* ====== CAPA ====== */
+function renderCapa(){
+  const html = `
+    <section class="view-capa">
+      <div class="cover">
+        <div class="cover-hero" role="img" aria-label="Capa do jogo Missão Empreendedora">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1600&auto=format&fit=crop" alt="" />
+          <div class="cover-title">
+            <h2>Missão Empreendedora</h2>
+            <p>Descobrir seu perfil empreendedor</p>
+          </div>
+        </div>
+        <p>Bem-vindo(a)! Este jogo foi pensado para você vivenciar desafios do comportamento empreendedor em um ambiente seguro e reflexivo.</p>
+      </div>
+      <div class="footer">
+        <div></div>
+        <div>
+          <button class="btn" id="btn-comecar">Começar</button>
+        </div>
+      </div>
+    </section>
+  `;
+  animateSwap(html);
+  $("#btn-comecar").addEventListener("click", ()=>{
+    estado.etapa = 'intro'; salvarEstado(); renderIntro();
+  });
+}
+
+/* ====== INTRODUÇÃO ====== */
+function renderIntro(){
+  const texto = `
+  <p>Você está prestes a entrar em uma experiência imersiva, onde cada escolha conta e cada decisão revela um pouco mais sobre o seu próprio empreendedor.</p>
+  <p>No O jogo Missão empreendedora, você encontrará cinco cenários com situações reais do mundo empreendedor: dilemas, tensões, oportunidades, conflitos e momentos de decisão sob pressão. Para cenário, terão afirmativas relacionadas a como você agiria naquela situação e você indicará seu nível de concordância com cada uma delas, “discordo totalmente” ao “concordo totalmente”.</p>
+  <p>Não existe resposta certa ou errada.<br>
+  O objetivo é diagnosticar seu estilo, reconhecer suas forças e identificar áreas de desenvolvimento.</p>
+  <p>Durante esse percurso, você explorará aspectos essenciais como:</p>
+  <ul>
+    <li>inteligência emocional,</li>
+    <li>comunicação assertiva,</li>
+    <li>liderança empática,</li>
+    <li>resiliência,</li>
+    <li>tomada de decisão em cenários incertos,</li>
+    <li>e o papel das soft skills no comportamento empreendedor.</li>
+  </ul>
+  <p><strong>Pronto(a) para avançar e conhecer sua própria forma de empreender?</strong></p>
+  `;
+  const html = `
+    <section class="view-intro">
+      <div class="intro">
+        <h3>Como funciona</h3>
+        ${texto}
+      </div>
+      <div class="footer">
+        <div>
+          <button class="btn secondary" id="btn-voltar-capa">Voltar</button>
+        </div>
+        <div>
+          <button class="btn" id="btn-avancar-intro">Avançar</button>
+        </div>
+      </div>
+    </section>
+  `;
+  animateSwap(html);
+  $("#btn-voltar-capa").addEventListener("click", ()=>{
+    estado.etapa = 'capa'; salvarEstado(); renderCapa();
+  });
+  $("#btn-avancar-intro").addEventListener("click", ()=>{
+    estado.etapa = 'jogo'; estado.atual = 0; salvarEstado(); renderCenario(0);
+  });
+}
+
+/* ====== CENÁRIO ====== */
 function renderCenario(idx){
   const c = cenarios[idx];
-  const [r1,r2,r3] = estado.respostas[idx];
   const progresso = Math.round(((idx)/cenarios.length)*100);
   const html = `
     <article class="view-cenario">
       <div class="hero">
-        <img src="${c.imagem}" alt="Imagem ilustrativa do ${c.titulo}">
+        <img src="${c.imagem}" alt="Imagem ilustrativa de: ${c.titulo}">
         <span class="badge">${idx+1} / ${cenarios.length}</span>
         <h2>${c.titulo}</h2>
       </div>
@@ -299,33 +396,30 @@ function renderCenario(idx){
 
       <div class="footer">
         <div>
-          <button class="btn secondary" ${idx===0?"disabled":""} onclick="onPrev()">
+          <button class="btn secondary" ${idx===0?"disabled":""} id="btn-voltar">
             ◀ Voltar
           </button>
         </div>
         <div>
-          <button class="btn secondary" onclick="onReset()">Recomeçar</button>
+          <button class="btn secondary" id="btn-recomecar">Recomeçar</button>
           ${idx<cenarios.length-1
-            ? `<button class="btn" ${(!isCenarioCompleto(idx)?"disabled":"")} onclick="onNext()">Avançar ▶</button>`
-            : `<button class="btn warn" ${(!isCenarioCompleto(idx)?"disabled":"")} onclick="finalizar()">Finalizar & Ver Feedback</button>`
+            ? `<button class="btn avancar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-avancar">Avançar ▶</button>`
+            : `<button class="btn warn finalizar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-finalizar">Finalizar & Ver Feedback</button>`
           }
         </div>
       </div>
     </article>
   `;
   animateSwap(html);
-  // add listeners para inputs:
-  cenarios[idx].afirmativas.forEach((_,i)=>{
-    $all(`input[name="c${idx}a${i}"]`).forEach(inp=>{
-      inp.addEventListener("change", (e)=>{
-        estado.respostas[idx][i] = Number(e.target.value);
-        salvarEstado();
-        // Habilita botão automaticamente
-        const btn = $(".btn.warn, .footer .btn:not(.secondary)");
-        if(btn && isCenarioCompleto(idx)) btn.disabled = false;
-      });
-    });
-  });
+
+  // footer actions
+  const btnVoltar = $("#btn-voltar");
+  if(btnVoltar) btnVoltar.addEventListener("click", onPrev);
+  $("#btn-recomecar").addEventListener("click", onReset);
+  const btnAvancar = $("#btn-avancar");
+  if(btnAvancar) btnAvancar.addEventListener("click", onNext);
+  const btnFinalizar = $("#btn-finalizar");
+  if(btnFinalizar) btnFinalizar.addEventListener("click", finalizar);
 }
 
 function renderAfirmativa(ci, ai, afirm, valor){
@@ -334,15 +428,21 @@ function renderAfirmativa(ci, ai, afirm, valor){
     1:"Discordo totalmente", 2:"Discordo parcialmente",
     3:"Neutro", 4:"Concordo parcialmente", 5:"Concordo totalmente"
   };
+  const groupName = `c${ci}a${ai}`;
   return `
     <div class="afirmativa">
       <p><strong>${ai+1}.</strong> ${afirm.texto}</p>
       <div class="likert">
-        <div class="scale" role="radiogroup" aria-label="Escala de 1 a 5">
+        <div class="scale" role="radiogroup" aria-label="Escala de 1 a 5: ${afirm.texto}">
           ${scale.map(v=>`
             <div>
-              <input id="c${ci}a${ai}_${v}" type="radio" name="c${ci}a${ai}" value="${v}" ${valor===v?"checked":""} />
-              <label for="c${ci}a${ai}_${v}" title="${legend[v]}">${v}<small>${v===1?"Discordo":v===5?"Concordo":legend[v]}</small></label>
+              <input id="${groupName}_${v}" type="radio" name="${groupName}" value="${v}"
+                     data-ci="${ci}" data-ai="${ai}" aria-label="${v} - ${legend[v]}"
+                     ${valor===v?"checked":""} />
+              <label for="${groupName}_${v}">
+                <span>${v}</span>
+                <small>${legend[v].replace("Discordo ","Discordo ").replace("Concordo ","Concordo ")}</small>
+              </label>
             </div>
           `).join("")}
         </div>
@@ -355,6 +455,30 @@ function isCenarioCompleto(idx){
   return estado.respostas[idx].every(v=>typeof v==="number" && v>=1 && v<=5);
 }
 
+/* ====== EVENTOS (DELEGAÇÃO) — Corrige o bug a partir do cenário 2 ====== */
+root.addEventListener("change", (e)=>{
+  const t = e.target;
+  if(t && t.matches('input[type="radio"][data-ci][data-ai]')){
+    const ci = Number(t.getAttribute("data-ci"));
+    const ai = Number(t.getAttribute("data-ai"));
+    const val = Number(t.value);
+    if(!Number.isNaN(ci) && !Number.isNaN(ai) && !Number.isNaN(val)){
+      // Atualiza estado
+      if(!estado.respostas[ci]) estado.respostas[ci] = [null,null,null];
+      estado.respostas[ci][ai] = val;
+      salvarEstado();
+
+      // Habilita botão de avanço, se o cenário atual estiver completo
+      if(estado.etapa==='jogo' && ci===estado.atual){
+        const btnAvancar = $("#btn-avancar");
+        const btnFinalizar = $("#btn-finalizar");
+        if(btnAvancar && isCenarioCompleto(ci)) btnAvancar.disabled = false;
+        if(btnFinalizar && isCenarioCompleto(ci)) btnFinalizar.disabled = false;
+      }
+    }
+  }
+});
+
 function onPrev(){ if(estado.atual>0){ estado.atual--; salvarEstado(); renderCenario(estado.atual); } }
 function onNext(){
   if(!isCenarioCompleto(estado.atual)) return;
@@ -363,22 +487,20 @@ function onNext(){
 function onReset(){
   if(!confirm("Tem certeza que deseja recomeçar? Isso apagará suas respostas.")) return;
   estado = {
+    etapa: 'capa',
     atual: 0,
     respostas: Array.from({length: cenarios.length}, () => [null, null, null]),
     finalizado: false,
     diag: null
   };
   salvarEstado();
-  renderCenario(0);
+  renderCapa();
 }
 
 /* ==========================
    Diagnóstico & Feedback
    ========================== */
-
 function calcularDiagnostico(){
-  // Agregar pontuações por objetivo
-  // Estrutura: soma e contagem para média
   const agg = {};
   Object.keys(objetivos).forEach(k=>agg[k] = { soma:0, qtd:0 });
 
@@ -398,19 +520,16 @@ function calcularDiagnostico(){
     medias[k] = qtd>0 ? Number((soma/qtd).toFixed(2)) : 0;
   });
 
-  // Classificação
-  const tags = {}; // ok, mid, low
+  const tags = {};
   Object.entries(medias).forEach(([k, m])=>{
     if(m >= 4.2) tags[k] = "ok";
     else if(m >= 3.0) tags[k] = "mid";
     else tags[k] = "low";
   });
 
-  // Pontos fortes e oportunidades
   const pontosFortes = Object.keys(medias).filter(k=>tags[k]==="ok");
   const oportunidades = Object.keys(medias).filter(k=>tags[k]==="low");
 
-  // Recomendações personalizadas por objetivo
   const recomenda = [];
   const addRec = (k, txt)=>recomenda.push({obj:k, texto:txt});
 
@@ -421,29 +540,33 @@ function calcularDiagnostico(){
   if(tags[5]==="low") addRec(5,"Estruture decisões sob pressão: use uma matriz impacto × risco em 5 minutos; valide com 1 pessoa crítica antes de anunciar.");
   if(tags[6]==="low") addRec(6,"Conecte soft skills à inovação: faça sessões de brainstorming com regras de escuta e documentação de aprendizados pós-teste.");
   if(tags[7]==="low") addRec(7,"Aplique ferramentas de autoconhecimento: diário de bordo, teste VIA ou Big Five e um plano de 30 dias com uma habilidade foco.");
-
-  // Se não houver “low”, sugerir exploração avançada
   if(recomenda.length===0){
     addRec(0,"Você demonstrou consistência. Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.");
   }
 
-  // Monta o objeto de diagnóstico
-  return {
-    medias, tags, pontosFortes, oportunidades, recomenda
-  };
+  return { medias, tags, pontosFortes, oportunidades, recomenda };
 }
 
 function finalizar(){
   if(!isCenarioCompleto(estado.atual)) return;
   estado.finalizado = true;
   estado.diag = calcularDiagnostico();
+  estado.etapa = 'feedback';
   salvarEstado();
   renderFeedback();
 }
 
+function avaliarResumoGeral(d){
+  const medias = Object.values(d.medias);
+  const mediaGlobal = medias.reduce((a,b)=>a+b,0)/medias.length || 0;
+  let cor = "equilibrada";
+  if(mediaGlobal>=4.2) cor = "consistente e madura";
+  else if(mediaGlobal<3) cor = "em desenvolvimento";
+  return `Com base nas respostas aos cinco cenários, foi possível mapear sua atuação frente a dilemas que envolvem empatia, comunicação, resiliência, ética e uso estratégico de habilidades humanas. A consistência média das decisões (${mediaGlobal.toFixed(2)}/5) indica uma atuação ${cor}, considerando as escalas de 1 (Discordo totalmente) a 5 (Concordo totalmente).`;
+}
+
 function renderFeedback(){
   const d = estado.diag || calcularDiagnostico();
-
   const chips = Object.keys(objetivos).map(k=>{
     const classe = d.tags[k]==="ok" ? "ok" : d.tags[k]==="low" ? "low" : "mid";
     const rotulo = d.tags[k]==="ok" ? "Alto" : d.tags[k]==="low" ? "Baixo" : "Médio";
@@ -475,7 +598,7 @@ function renderFeedback(){
   const html = `
     <section class="view-feedback">
       <div class="hero">
-        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="Imagem de conclusão e colaboração">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="Relatório do jogo">
         <span class="badge">Relatório</span>
         <h2>📊 Relatório de Feedback do Jogo: Missão Empreendedora – Decida com Coragem</h2>
       </div>
@@ -535,23 +658,7 @@ function renderFeedback(){
   animateSwap(html);
 }
 
-function avaliarResumoGeral(d){
-  // Texto base alinhado ao pedido + nuance conforme médias
-  const medias = Object.values(d.medias);
-  const mediaGlobal = medias.reduce((a,b)=>a+b,0)/medias.length || 0;
-
-  let cor = "equilibrada";
-  if(mediaGlobal>=4.2) cor = "consistente e madura";
-  else if(mediaGlobal<3) cor = "em desenvolvimento";
-
-  return `Com base nas respostas aos cinco cenários, foi possível mapear sua atuação frente a dilemas que envolvem empatia, comunicação, resiliência, ética e uso estratégico de habilidades humanas. A consistência média das decisões (${mediaGlobal.toFixed(2)}/5) indica uma atuação ${cor}, considerando as escalas de 1 (Discordo totalmente) a 5 (Concordo totalmente).`;
-}
-
-function refazer(){
-  // Mantém diagnóstico anterior em storage? Vamos reiniciar.
-  onReset();
-}
-
+function refazer(){ onReset(); }
 function baixarJSON(){
   const payload = {
     timestamp: new Date().toISOString(),
@@ -570,9 +677,11 @@ function baixarJSON(){
   URL.revokeObjectURL(url);
 }
 
-/* Inicialização */
-if(estado.finalizado){ renderFeedback(); } else { renderCenario(estado.atual); }
+/* Inicialização por etapa */
+if(estado.etapa==='feedback'){ renderFeedback(); }
+else if(estado.etapa==='jogo'){ renderCenario(estado.atual); }
+else if(estado.etapa==='intro'){ renderIntro(); }
+else { renderCapa(); }
 </script>
 </body>
 </html>
-``
