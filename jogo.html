@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Missão Empreendedora – Decida com Coragem</title>
+<meta name="description" content="Jogo gamificado sobre comportamento empreendedor e soft skills." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='60' cy='60' r='56' fill='%230b2a4a'/%3E%3Cpath d='M35 65 L60 30 L85 65 L60 90 Z' fill='%23ff7a00'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --azul:#0b2a4a;
+    --azul-2:#12375e;
+    --laranja:#ff7a00;
+    --laranja-2:#ffa24a;
+    --branco:#ffffff;
+    --cinza:#f3f5f7;
+    --cinza-2:#d7dde3;
+    --texto:#0d1b2a;
+    --neutro:#748cab;
+    --ok:#10b981;
+    --warn:#f59e0b;
+    --risk:#ef4444;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(11,42,74,0.15);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font:16px/1.5 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--texto);
+    background:linear-gradient(180deg,#0b2a4a 0%,#0b2a4a 35%,#f6f9fc 35%,#f6f9fc 100%);
+  }
+  .app{
+    max-width:960px;
+    margin: clamp(16px,4vh,40px) auto;
+    padding: 0 16px 40px;
+  }
+  header{
+    color:var(--branco);
+    display:flex;align-items:center;gap:14px;margin-bottom:14px;
+  }
+  .logo{
+    width:42px;height:42px;border-radius:10px;background:var(--laranja);
+    display:grid;place-items:center;color:var(--branco);font-weight:800;box-shadow:var(--shadow)
+  }
+  .title h1{margin:0;font-size:1.4rem}
+  .title p{margin:4px 0 0;color:#e2e8f0;font-size:.95rem}
+  .card{
+    background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
+  }
+  .hero{
+    position:relative;height:200px;background:var(--azul-2);color:#fff;display:flex;align-items:end;
+    padding:18px 20px;border-bottom:1px solid #0b2a4a20;
+  }
+  .hero img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.32;filter:saturate(.9) contrast(1.05);
+  }
+  .hero .badge{
+    position:absolute;top:12px;left:12px;background:rgba(255,122,0,.95);color:#fff;padding:6px 10px;border-radius:999px;
+    font-weight:700;box-shadow:0 6px 18px rgba(255,122,0,.35);font-size:.9rem
+  }
+  .hero h2{position:relative;margin:0;font-size:1.35rem;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+  .content{padding:18px 18px 6px}
+  .narrativa{
+    background:var(--cinza);border:1px solid var(--cinza-2);padding:14px;border-radius:12px;color:#1f2937
+  }
+  .afirmativas{margin-top:14px;display:flex;flex-direction:column;gap:14px}
+  .afirmativa{
+    border:1px solid var(--cinza-2);border-radius:12px;padding:12px;background:#fff;transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .afirmativa:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(18,55,94,.08)}
+  .afirmativa p{margin:0 0 10px}
+  .likert{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .scale{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:8px;flex:1;min-width:260px
+  }
+  .scale label{
+    display:grid;place-items:center;padding:10px;border:1px solid var(--cinza-2);border-radius:10px;background:#fff;cursor:pointer;
+    user-select:none;font-weight:600;color:#334155;position:relative;transition:all .15s ease
+  }
+  .scale label small{position:absolute;bottom:6px;font-weight:500;color:#64748b;font-size:.7rem}
+  .scale input{display:none}
+  .scale input:checked + label{
+    border-color:var(--laranja);background:linear-gradient(180deg,#fff 0%,#fff 35%,#fff0 100%), rgba(255,122,0,.08);
+    box-shadow:0 0 0 3px rgba(255,122,0,.15) inset, 0 8px 18px rgba(255,122,0,.08);
+    color:#0b2a4a
+  }
+  .legenda{font-size:.85rem;color:#475569;display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
+  .progress{
+    margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden
+  }
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--laranja),#ff9d40);transition:width .4s ease}
+  .footer{
+    display:flex;justify-content:space-between;gap:10px;padding:14px;background:#fff;border-top:1px solid #e5e7eb;border-radius:0 0 var(--radius) var(--radius)
+  }
+  .btn{
+    appearance:none;border:0;background:var(--azul);color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer;
+    display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 22px rgba(11,42,74,.2);transition:transform .15s ease, filter .15s ease
+  }
+  .btn.secondary{background:#fff;color:var(--azul);border:1px solid var(--cinza-2);box-shadow:none}
+  .btn.warn{background:var(--laranja)}
+  .btn:disabled{opacity:.6;cursor:not-allowed;filter:grayscale(.2)}
+  .fade-enter{opacity:0;transform:translateY(8px)}
+  .fade-enter-active{opacity:1;transform:none;transition:all .35s ease}
+  .fade-exit{opacity:1;transform:none}
+  .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
+  .feedback{padding:18px}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0
+  }
+  .pill.ok{background:#ecfdf5;color:#065f46}
+  .pill.mid{background:#fff7ed;color:#9a3412}
+  .pill.low{background:#fef2f2;color:#7f1d1d}
+  .grid{display:grid;grid-template-columns:1fr;gap:14px}
+  @media (min-width:860px){ .grid{grid-template-columns:1.1fr .9fr} }
+  .box{
+    background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px
+  }
+  .checklist li{margin:8px 0}
+  /* Impressão */
+  @media print{
+    header, .footer, .progress, .btn, .logo { display:none !important; }
+    body{background:#fff}
+    .card{box-shadow:none;border:0}
+  }
+</style>
+</head>
+<body>
+<div class="app" role="application" aria-label="Missão Empreendedora – Decida com Coragem">
+  <header>
+    <div class="logo" aria-hidden="true">ME</div>
+    <div class="title">
+      <h1>Missão Empreendedora – Decida com Coragem</h1>
+      <p>Comportamento Empreendedor e Soft Skills • UDA PUC Minas Virtual</p>
+    </div>
+  </header>
+
+  <section id="root" class="card" aria-live="polite"></section>
+</div>
+
+<script>
+/* =========================
+   Dados do jogo (Cenários)
+   ========================= */
+
+const PALETA = {
+  azul: "#0b2a4a", laranja: "#ff7a00", branco: "#ffffff"
+};
+
+// 👉 Substitua as imagens pelos visuais oficiais da disciplina, se desejar.
+const cenarios = [
+  {
+    titulo: "Cenário 1: A Reunião Tensa",
+    imagem: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop",
+    narrativa: "Você é convidado para uma reunião de urgência. A startup onde trabalha enfrenta uma crise de comunicação interna. O clima é tenso e todos aguardam que você proponha uma solução. Um colega levanta a voz, outro silencia. Você sente a pressão.",
+    afirmativas: [
+      { texto: "Tentei manter a calma e escutar com empatia cada colega antes de intervir.", objetivos: [3,4] },
+      { texto: "Consegui articular minha fala de forma clara, mesmo sob pressão emocional.", objetivos: [2,4,5] },
+      { texto: "Avaliei como minha fala poderia impactar a motivação da equipe antes de responder.", objetivos: [3,4] },
+    ]
+  },
+  {
+    titulo: "Cenário 2: A Escolha do Sócio",
+    imagem: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1600&auto=format&fit=crop",
+    narrativa: "Você precisa decidir entre dois sócios com perfis muito diferentes: um é tecnicamente brilhante, o outro é mais sensível e ético, porém com menos resultados práticos até agora.",
+    afirmativas: [
+      { texto: "Priorizei a confiança e a sinergia emocional, mesmo que isso implique em mais tempo para resultados.", objetivos: [2,3] },
+      { texto: "Tentei pensar nos impactos da decisão para a cultura da empresa a médio e longo prazo.", objetivos: [1,5] },
+      { texto: "Considerei como essa decisão afetaria meu próprio equilíbrio emocional e motivação para seguir empreendendo.", objetivos: [3,7] },
+    ]
+  },
+  {
+    titulo: "Cenário 3: A Incerteza no Lançamento",
+    imagem: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop",
+    narrativa: "Você está prestes a lançar um produto digital, mas uma nova tecnologia acaba de ser divulgada e pode tornar seu produto obsoleto. Sua equipe está dividida entre seguir ou adiar.",
+    afirmativas: [
+      { texto: "Fiz uma análise rápida e emocionalmente equilibrada sobre os riscos envolvidos.", objetivos: [3,5] },
+      { texto: "Pensei no bem-estar da equipe ao decidir não impor minha decisão de forma autoritária.", objetivos: [3,4] },
+      { texto: "Revisitei meu propósito empreendedor para decidir o que fazia mais sentido a longo prazo.", objetivos: [1,7] },
+    ]
+  },
+  {
+    titulo: "Cenário 4: A Crítica em Público",
+    imagem: "https://images.unsplash.com/photo-1485217988980-11786ced9454?q=80&w=1600&auto=format&fit=crop",
+    narrativa: "Durante um evento de pitch, você é duramente criticado por um avaliador. A plateia fica em silêncio. Sua equipe te observa atentamente esperando sua reação.",
+    afirmativas: [
+      { texto: "Controlei minha reação imediata para evitar uma resposta impulsiva.", objetivos: [3,5] },
+      { texto: "Aproveitei a crítica para refletir e reformular parte da proposta com serenidade.", objetivos: [2,3,6] },
+      { texto: "Usei a situação como aprendizado coletivo para inspirar minha equipe após o evento.", objetivos: [1,4] },
+    ]
+  },
+  {
+    titulo: "Cenário 5: O Algoritmo Injusto",
+    imagem: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop",
+    narrativa: "Seu sistema de automação de atendimento digital começa a gerar reclamações por respostas impessoais. Seu sócio propõe manter o sistema assim para reduzir custos, mas você tem dúvidas éticas.",
+    afirmativas: [
+      { texto: "Considerei o impacto humano antes de apoiar o uso do sistema automatizado.", objetivos: [1,2] },
+      { texto: "Sugeri alternativas tecnológicas mais alinhadas a um atendimento empático.", objetivos: [4,6] },
+      { texto: "Refleti sobre como decisões tecnológicas podem enfraquecer a confiança com o cliente.", objetivos: [1,6] },
+    ]
+  }
+];
+
+const objetivos = {
+  1: "Fundamentos do comportamento empreendedor e criação de valor",
+  2: "Importância e aplicação de soft skills no desempenho profissional",
+  3: "Inteligência emocional aplicada à liderança e gestão",
+  4: "Comunicação empática e assertiva em trabalho em equipe",
+  5: "Decisão sob pressão com aspectos emocionais e estratégicos",
+  6: "Soft skills para oportunidades e soluções inovadoras",
+  7: "Ferramentas de autoconhecimento e desenvolvimento pessoal/profissional",
+};
+
+// Estado & Persistência
+const STORAGE_KEY = "missaoEmpreendedora_v1";
+let estado = {
+  atual: 0, // índice do cenário
+  respostas: Array.from({length: cenarios.length}, () => [null, null, null]), // 5x3
+  finalizado: false,
+  diag: null
+};
+
+function carregarEstado(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return;
+  try{
+    const data = JSON.parse(raw);
+    if(Array.isArray(data.respostas)) estado.respostas = data.respostas;
+    if(typeof data.atual === "number") estado.atual = Math.min(Math.max(0,data.atual), cenarios.length-1);
+    if(data.finalizado) estado.finalizado = true;
+    if(data.diag) estado.diag = data.diag;
+  }catch(e){}
+}
+function salvarEstado(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+}
+carregarEstado();
+
+/* ==============
+   Renderização
+   ============== */
+const root = document.getElementById("root");
+
+function $(sel, ctx=document){ return ctx.querySelector(sel); }
+function $all(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
+
+function animateSwap(html){
+  const node = document.createElement("div");
+  node.innerHTML = html;
+  const next = node.firstElementChild;
+  if(!root.firstChild){
+    root.appendChild(next);
+    requestAnimationFrame(()=>next.classList.add("fade-enter-active"));
+    return;
+  }
+  const current = root.firstElementChild;
+  current.classList.add("fade-exit-active");
+  setTimeout(()=>{
+    root.replaceChildren(next);
+    next.classList.add("fade-enter");
+    requestAnimationFrame(()=>{
+      next.classList.add("fade-enter-active");
+      next.classList.remove("fade-enter");
+    });
+  }, 200);
+}
+
+function renderCenario(idx){
+  const c = cenarios[idx];
+  const [r1,r2,r3] = estado.respostas[idx];
+  const progresso = Math.round(((idx)/cenarios.length)*100);
+  const html = `
+    <article class="view-cenario">
+      <div class="hero">
+        <img src="${c.imagem}" alt="Imagem ilustrativa do ${c.titulo}">
+        <span class="badge">${idx+1} / ${cenarios.length}</span>
+        <h2>${c.titulo}</h2>
+      </div>
+      <div class="content">
+        <div class="narrativa">${c.narrativa}</div>
+
+        <div class="afirmativas" role="group" aria-labelledby="afirmativas-${idx}">
+          ${c.afirmativas.map((a,i)=>renderAfirmativa(idx,i,a,estado.respostas[idx][i])).join("")}
+        </div>
+
+        <div class="legenda" aria-hidden="true">
+          <span><strong>1</strong> – Discordo totalmente</span>
+          <span><strong>2</strong> – Discordo parcialmente</span>
+          <span><strong>3</strong> – Neutro</span>
+          <span><strong>4</strong> – Concordo parcialmente</span>
+          <span><strong>5</strong> – Concordo totalmente</span>
+        </div>
+
+        <div class="progress" aria-label="Progresso do jogo">
+          <span style="width:${progresso}%"></span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div>
+          <button class="btn secondary" ${idx===0?"disabled":""} onclick="onPrev()">
+            ◀ Voltar
+          </button>
+        </div>
+        <div>
+          <button class="btn secondary" onclick="onReset()">Recomeçar</button>
+          ${idx<cenarios.length-1
+            ? `<button class="btn" ${(!isCenarioCompleto(idx)?"disabled":"")} onclick="onNext()">Avançar ▶</button>`
+            : `<button class="btn warn" ${(!isCenarioCompleto(idx)?"disabled":"")} onclick="finalizar()">Finalizar & Ver Feedback</button>`
+          }
+        </div>
+      </div>
+    </article>
+  `;
+  animateSwap(html);
+  // add listeners para inputs:
+  cenarios[idx].afirmativas.forEach((_,i)=>{
+    $all(`input[name="c${idx}a${i}"]`).forEach(inp=>{
+      inp.addEventListener("change", (e)=>{
+        estado.respostas[idx][i] = Number(e.target.value);
+        salvarEstado();
+        // Habilita botão automaticamente
+        const btn = $(".btn.warn, .footer .btn:not(.secondary)");
+        if(btn && isCenarioCompleto(idx)) btn.disabled = false;
+      });
+    });
+  });
+}
+
+function renderAfirmativa(ci, ai, afirm, valor){
+  const scale = [1,2,3,4,5];
+  const legend = {
+    1:"Discordo totalmente", 2:"Discordo parcialmente",
+    3:"Neutro", 4:"Concordo parcialmente", 5:"Concordo totalmente"
+  };
+  return `
+    <div class="afirmativa">
+      <p><strong>${ai+1}.</strong> ${afirm.texto}</p>
+      <div class="likert">
+        <div class="scale" role="radiogroup" aria-label="Escala de 1 a 5">
+          ${scale.map(v=>`
+            <div>
+              <input id="c${ci}a${ai}_${v}" type="radio" name="c${ci}a${ai}" value="${v}" ${valor===v?"checked":""} />
+              <label for="c${ci}a${ai}_${v}" title="${legend[v]}">${v}<small>${v===1?"Discordo":v===5?"Concordo":legend[v]}</small></label>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function isCenarioCompleto(idx){
+  return estado.respostas[idx].every(v=>typeof v==="number" && v>=1 && v<=5);
+}
+
+function onPrev(){ if(estado.atual>0){ estado.atual--; salvarEstado(); renderCenario(estado.atual); } }
+function onNext(){
+  if(!isCenarioCompleto(estado.atual)) return;
+  if(estado.atual<cenarios.length-1){ estado.atual++; salvarEstado(); renderCenario(estado.atual); }
+}
+function onReset(){
+  if(!confirm("Tem certeza que deseja recomeçar? Isso apagará suas respostas.")) return;
+  estado = {
+    atual: 0,
+    respostas: Array.from({length: cenarios.length}, () => [null, null, null]),
+    finalizado: false,
+    diag: null
+  };
+  salvarEstado();
+  renderCenario(0);
+}
+
+/* ==========================
+   Diagnóstico & Feedback
+   ========================== */
+
+function calcularDiagnostico(){
+  // Agregar pontuações por objetivo
+  // Estrutura: soma e contagem para média
+  const agg = {};
+  Object.keys(objetivos).forEach(k=>agg[k] = { soma:0, qtd:0 });
+
+  cenarios.forEach((c,ci)=>{
+    c.afirmativas.forEach((a,ai)=>{
+      const v = estado.respostas[ci][ai];
+      if(typeof v!=="number") return;
+      a.objetivos.forEach(obj=>{
+        agg[obj].soma += v;
+        agg[obj].qtd += 1;
+      });
+    });
+  });
+
+  const medias = {};
+  Object.entries(agg).forEach(([k,{soma,qtd}])=>{
+    medias[k] = qtd>0 ? Number((soma/qtd).toFixed(2)) : 0;
+  });
+
+  // Classificação
+  const tags = {}; // ok, mid, low
+  Object.entries(medias).forEach(([k, m])=>{
+    if(m >= 4.2) tags[k] = "ok";
+    else if(m >= 3.0) tags[k] = "mid";
+    else tags[k] = "low";
+  });
+
+  // Pontos fortes e oportunidades
+  const pontosFortes = Object.keys(medias).filter(k=>tags[k]==="ok");
+  const oportunidades = Object.keys(medias).filter(k=>tags[k]==="low");
+
+  // Recomendações personalizadas por objetivo
+  const recomenda = [];
+  const addRec = (k, txt)=>recomenda.push({obj:k, texto:txt});
+
+  if(tags[1]==="low") addRec(1,"Reforce práticas de visão de valor: ao decidir, explicite como a ação proposta cria valor para clientes e equipe. Registre hipóteses de impacto.");
+  if(tags[2]==="low") addRec(2,"Pratique soft skills em micro-rotinas: feedbacks curtos semanais, reuniões de 15’ com turnos de fala e acordos de convivência.");
+  if(tags[3]==="low") addRec(3,"Treine regulação emocional: respiração box, pausa de 90 segundos antes de responder e nomeação de emoções (‘sinto X, porque Y’).");
+  if(tags[4]==="low") addRec(4,"Aprimore comunicação empática: resuma o que ouviu antes de propor, use perguntas abertas e defina ‘próximos passos’ explícitos.");
+  if(tags[5]==="low") addRec(5,"Estruture decisões sob pressão: use uma matriz impacto × risco em 5 minutos; valide com 1 pessoa crítica antes de anunciar.");
+  if(tags[6]==="low") addRec(6,"Conecte soft skills à inovação: faça sessões de brainstorming com regras de escuta e documentação de aprendizados pós-teste.");
+  if(tags[7]==="low") addRec(7,"Aplique ferramentas de autoconhecimento: diário de bordo, teste VIA ou Big Five e um plano de 30 dias com uma habilidade foco.");
+
+  // Se não houver “low”, sugerir exploração avançada
+  if(recomenda.length===0){
+    addRec(0,"Você demonstrou consistência. Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.");
+  }
+
+  // Monta o objeto de diagnóstico
+  return {
+    medias, tags, pontosFortes, oportunidades, recomenda
+  };
+}
+
+function finalizar(){
+  if(!isCenarioCompleto(estado.atual)) return;
+  estado.finalizado = true;
+  estado.diag = calcularDiagnostico();
+  salvarEstado();
+  renderFeedback();
+}
+
+function renderFeedback(){
+  const d = estado.diag || calcularDiagnostico();
+
+  const chips = Object.keys(objetivos).map(k=>{
+    const classe = d.tags[k]==="ok" ? "ok" : d.tags[k]==="low" ? "low" : "mid";
+    const rotulo = d.tags[k]==="ok" ? "Alto" : d.tags[k]==="low" ? "Baixo" : "Médio";
+    return `<span class="pill ${classe}" title="Média ${d.medias[k]}">${k}. ${rotulo}</span>`;
+  }).join("");
+
+  const tabela = Object.keys(objetivos).map(k=>`
+    <li>
+      <strong>${k}. ${objetivos[k]}</strong><br>
+      <small>Média: <b>${d.medias[k].toFixed(2)}</b> • Nível: ${d.tags[k]==="ok"?"Alto":d.tags[k]==="low"?"Baixo":"Médio"}</small>
+    </li>
+  `).join("");
+
+  const pontosFortes = d.pontosFortes.length
+    ? d.pontosFortes.map(k=>`<li>${objetivos[k]}</li>`).join("")
+    : `<li>—</li>`;
+
+  const oportunidades = d.oportunidades.length
+    ? d.oportunidades.map(k=>`<li>${objetivos[k]}</li>`).join("")
+    : `<li>—</li>`;
+
+  const recos = d.recomenda.map(r=>{
+    if(r.obj===0) return `<li>${r.texto}</li>`;
+    return `<li><strong>${r.obj}. ${objetivos[r.obj]}:</strong> ${r.texto}</li>`;
+  }).join("");
+
+  const resumoGeral = avaliarResumoGeral(d);
+
+  const html = `
+    <section class="view-feedback">
+      <div class="hero">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="Imagem de conclusão e colaboração">
+        <span class="badge">Relatório</span>
+        <h2>📊 Relatório de Feedback do Jogo: Missão Empreendedora – Decida com Coragem</h2>
+      </div>
+
+      <div class="feedback">
+        <div class="grid">
+          <div class="box">
+            <h3>🎯 1. Diagnóstico Geral</h3>
+            <p>${resumoGeral}</p>
+            <div>${chips}</div>
+          </div>
+          <div class="box">
+            <h3>Visão por objetivo</h3>
+            <ul>${tabela}</ul>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="box">
+            <h3>✅ 2. Pontos Fortes Identificados</h3>
+            <ul>${pontosFortes}</ul>
+          </div>
+          <div class="box">
+            <h3>🔍 3. Oportunidades de Desenvolvimento</h3>
+            <ul>${oportunidades}</ul>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>💡 4. Recomendações Personalizadas</h3>
+          <ul class="checklist">
+            ${recos}
+            <li>Refaça o jogo selecionando alternativas diferentes para observar reações distintas.</li>
+            <li>Acesse os materiais complementares na UDA (autoconhecimento, vídeos de tomada de decisão).</li>
+            <li>Registre percepções no diário de bordo e construa um plano pessoal de melhoria em soft skills.</li>
+            <li>Converse com colegas e tutores para trocar experiências sobre as decisões e implicações práticas.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h3>📝 5. Conclusão</h3>
+          <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você vivencie, na prática, desafios do comportamento empreendedor. Aproveite os feedbacks como ponto de partida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a). Continue explorando, errando, acertando e aprendendo — esse é o espírito que transforma realidades.</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div>
+          <button class="btn secondary" onclick="window.print()">🖨 Imprimir / Salvar PDF</button>
+          <button class="btn secondary" onclick="baixarJSON()">⬇ Baixar resultados (.json)</button>
+        </div>
+        <div>
+          <button class="btn" onclick="refazer()">🔁 Refazer</button>
+        </div>
+      </div>
+    </section>
+  `;
+  animateSwap(html);
+}
+
+function avaliarResumoGeral(d){
+  // Texto base alinhado ao pedido + nuance conforme médias
+  const medias = Object.values(d.medias);
+  const mediaGlobal = medias.reduce((a,b)=>a+b,0)/medias.length || 0;
+
+  let cor = "equilibrada";
+  if(mediaGlobal>=4.2) cor = "consistente e madura";
+  else if(mediaGlobal<3) cor = "em desenvolvimento";
+
+  return `Com base nas respostas aos cinco cenários, foi possível mapear sua atuação frente a dilemas que envolvem empatia, comunicação, resiliência, ética e uso estratégico de habilidades humanas. A consistência média das decisões (${mediaGlobal.toFixed(2)}/5) indica uma atuação ${cor}, considerando as escalas de 1 (Discordo totalmente) a 5 (Concordo totalmente).`;
+}
+
+function refazer(){
+  // Mantém diagnóstico anterior em storage? Vamos reiniciar.
+  onReset();
+}
+
+function baixarJSON(){
+  const payload = {
+    timestamp: new Date().toISOString(),
+    respostas: estado.respostas,
+    diagnostico: estado.diag || calcularDiagnostico(),
+    objetivos
+  };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "missao-empreendedora-resultados.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* Inicialização */
+if(estado.finalizado){ renderFeedback(); } else { renderCenario(estado.atual); }
+</script>
+</body>
+</html>
+``
