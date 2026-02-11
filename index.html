@@ -23,7 +23,10 @@
     --shadow:0 10px 30px rgba(11,42,74,0.15);
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html,body{height:auto; min-height:100%;}
+  /* Apenas quando embutido (classe adicionada via JS): sem scroll interno */
+  html.embedded, body.embedded{ overflow:hidden !important; }
+
   body{
     margin:0;
     font:16px/1.5 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -52,7 +55,7 @@
   /* ======== HERO (imagem maior e centralizada) ======== */
   .hero{
     position:relative;
-    height:340px;             /* Aumentado */
+    height:340px;             /* Aumentado para melhor visualização */
     background:var(--azul-2);
     color:#fff;display:flex;align-items:end;
     padding:18px 20px;border-bottom:1px solid #0b2a4a20;
@@ -129,7 +132,7 @@
     outline:3px solid #ffb56b; outline-offset:2px;
   }
 
-  /* ===== Removida a legenda pós-afirmativas ===== */
+  /* ===== Legenda removida ===== */
   .legenda { display:none !important; }
 
   .progress{ margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
@@ -151,14 +154,10 @@
   .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
 
   .feedback{padding:18px}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0}
-  .pill.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
-  .pill.mid{background:#fff7ed;color:var(--warn-dark);border:1px solid #fed7aa}
-  .pill.low{background:#fef2f2;color:var(--risk-dark);border:1px solid #fecaca}
 
   /* ====== Espaçamento maior entre as caixas do relatório ====== */
-  .feedback .stack { display:flex; flex-direction:column; gap:22px; } /* mais espaço entre 1,2,3,4 */
-  .grid{display:grid;grid-template-columns:1fr;gap:22px} /* gap maior */
+  .feedback .stack { display:flex; flex-direction:column; gap:22px; }
+  .grid{display:grid;grid-template-columns:1fr;gap:22px}
   @media (min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
   .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
 
@@ -214,8 +213,8 @@
 
   /* Intro: reduzir espaçamentos entre parágrafos */
   .intro h3{margin:0 0 6px}
-  .intro p{margin:6px 0}           /* reduzido */
-  .intro ul{margin:6px 0 0 1.2rem}  /* reduzido */
+  .intro p{margin:6px 0}
+  .intro ul{margin:6px 0 0 1.2rem}
 </style>
 </head>
 <body>
@@ -233,7 +232,7 @@
 
 <script>
 /* =========================
-   Dados do jogo (Cenários)
+   Imagens e Cenários
    ========================= */
 
 const PALETA = { azul:"#0b2a4a", laranja:"#ff7a00", branco:"#ffffff" };
@@ -428,7 +427,7 @@ function renderCenario(idx){
   const html = `
     <article class="view-cenario">
       <div class="hero">
-        <img src="${c.imagem}" alt="" />
+        <img src="${c.imagem}" alt="Ilustração do ${c.titulo}" />
         <span class="badge">${idx+1} / ${cenarios.length}</span>
         <h2>${c.titulo}</h2>
       </div>
@@ -713,7 +712,7 @@ function renderFeedback(){
   const html = `
     <section class="view-feedback">
       <div class="hero">
-        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="Ilustração do relatório do jogo" />
         <span class="badge">Relatório</span>
         <h2>📊 Relatório do Jogo: Missão Empreendedora – Decida com Coragem</h2>
       </div>
@@ -769,6 +768,7 @@ function renderFeedback(){
       <div class="footer">
         <div>
           <button class="btn secondary" onclick="window.print()" type="button">🖨 Imprimir / Salvar PDF</button>
+          <button class="btn secondary" onclick="baixarJSON()" type="button">⬇ Baixar resultados (.json)</button>
         </div>
         <div>
           <button class="btn" onclick="refazer()" type="button">🔁 Refazer</button>
@@ -780,6 +780,68 @@ function renderFeedback(){
 }
 
 function refazer(){ onReset(); }
+function baixarJSON(){
+  const payload = {
+    timestamp: new Date().toISOString(),
+    respostas: estado.respostas,
+    diagnostico: estado.diag || calcularDiagnostico(),
+    objetivos
+  };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "missao-empreendedora-resultados.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* ===== Auto-resize para quando o jogo estiver embutido em iframe ===== */
+(function(){
+  const isInIframe = window.parent && window.parent !== window;
+  if(!isInIframe) return;
+
+  // Adiciona classe para evitar scroll interno quando embedado
+  document.documentElement.classList.add('embedded');
+  document.body.classList.add('embedded');
+
+  function getContentHeight(){
+    // Altura máxima entre document, body e root
+    const h1 = document.documentElement.scrollHeight || 0;
+    const h2 = document.body ? document.body.scrollHeight : 0;
+    const h3 = document.getElementById('root')?.scrollHeight || 0;
+    return Math.max(h1, h2, h3) + 8; // margem de segurança
+  }
+
+  function postSize(){
+    const height = getContentHeight();
+    try{
+      window.parent.postMessage(
+        { type: 'ME_RESIZE', height, source: 'missao-empreendedora' },
+        '*'
+      );
+    }catch(e){}
+  }
+
+  // Observadores de mudança no layout
+  const ro = new ResizeObserver(()=>postSize());
+  ro.observe(document.documentElement);
+  if(document.body) ro.observe(document.body);
+  const root = document.getElementById('root');
+  if(root) ro.observe(root);
+
+  // Mutations (troca de telas, etc.)
+  const mo = new MutationObserver(()=>postSize());
+  mo.observe(document.documentElement, { childList:true, subtree:true, attributes:true });
+
+  // Eventos comuns
+  ['load','resize'].forEach(evt => window.addEventListener(evt, postSize));
+
+  // Disparo inicial
+  postSize();
+})();
 
 /* Inicialização por etapa */
 if(estado.etapa==='feedback'){ renderFeedback(); }
