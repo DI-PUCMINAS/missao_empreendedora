@@ -21,6 +21,15 @@
     --risk-dark:#7f1d1d;  /* Vermelho escuro (Baixo) */
     --radius:14px;
     --shadow:0 10px 30px rgba(11,42,74,0.15);
+
+    /* Altura fixa das telas */
+    --screen-h: 1000px;
+
+    /* Alturas sugeridas por view (grid rows) */
+    --hero-h: 320px;      /* hero cenários/relatório */
+    --hero-h-cover: 520px;/* hero capa */
+    --hero-h-intro: 320px;/* hero orientações */
+    --footer-h: 88px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -29,7 +38,7 @@
     font:16px/1.5 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     color:var(--texto);
     background:linear-gradient(180deg,#0b2a4a 0%,#0b2a4a 35%,#f6f9fc 35%,#f6f9fc 100%);
-    overflow-x:hidden; /* evita scroll horizontal eventual no mobile */
+    overflow-x:hidden; /* evita scroll horizontal */
   }
   .app{
     max-width:960px;
@@ -46,20 +55,30 @@
   }
   .title h1{margin:0;font-size:1.4rem}
   .title p{margin:4px 0 0;color:#e2e8f0;font-size:.95rem}
+
+  /* ====== CARD vira um “quadro” fixo de 1000px ====== */
   .card{
-    background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
+    background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+    height: var(--screen-h);
+    display: block;
+    position: relative;
   }
 
-  /* ======== HERO ======== */
+  /* ====== Views com grid hero / content / footer ====== */
+  .view{
+    height:100%;
+    display:grid;
+    grid-template-rows: auto 1fr var(--footer-h);
+    min-height: 0; /* permite overflow nas áreas internas */
+  }
+
+  /* ====== HERO (cenário/relatório) ====== */
   .hero{
     position:relative;
-    height:340px;
+    height: var(--hero-h);
     background:var(--azul-2);
     color:#fff;display:flex;align-items:end;
     padding:18px 20px;border-bottom:1px solid #0b2a4a20;
-  }
-  @media (min-width:860px){
-    .hero{height:400px;}
   }
   .hero img{
     position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
@@ -78,22 +97,72 @@
     text-shadow:0 2px 10px rgba(0,0,0,.35)
   }
 
-  .content{padding:18px 18px 6px}
+  .content{padding:18px 18px 6px; overflow:auto; min-height:0;}
 
-  /* ======== Narrativa ======== */
-  .narrativa{
-    background:var(--cinza);border:1px solid var(--cinza-2);padding:16px;border-radius:12px;color:#1f2937;
-    font-size:1.05rem;
+  /* ====== CAPA ====== */
+  .view-capa{
+    grid-template-rows: var(--hero-h-cover) 1fr var(--footer-h);
+  }
+  .cover-hero{
+    position:relative;height:100%;background:#0b2a4a;overflow:hidden;
+    display:flex;align-items:flex-end;padding:22px;color:#fff;border-bottom:1px solid #0b2a4a20
+  }
+  .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;pointer-events:none}
+  .cover-title{position:relative;display:flex;align-items:end;gap:16px}
+  .cover-title .icon-xl{
+    width:104px;height:104px;border-radius:24px;background:linear-gradient(180deg,#ff8a1a,#ff7a00);
+    display:grid;place-items:center;font-weight:900;font-size:2rem;color:#fff;box-shadow:0 16px 40px rgba(255,122,0,.25);
+    border:2px solid rgba(255,255,255,.35)
+  }
+  .cover-title h2{margin:0;font-size:2.4rem;letter-spacing:.5px}
+  .cover-title p{margin:8px 0 0;font-size:1.12rem;color:#e6edf5}
+
+  .cover-intro{
+    padding:18px;
+  }
+  .cover-intro p{margin:0;font-size:1.02rem;color:#1f2937}
+
+  /* ====== INTRO (Orientações) ====== */
+  .view-intro{
+    grid-template-rows: var(--hero-h-intro) 1fr var(--footer-h);
+  }
+  .intro-hero{
+    position:relative;height:100%;background:#0b2a4a;overflow:hidden;color:#fff;
+    display:flex;align-items:end; padding:22px; border-bottom:1px solid #0b2a4a20;
+  }
+  .intro-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.38;pointer-events:none}
+  .intro-hero h3{position:relative;margin:0 0 4px;font-size:1.6rem}
+  .intro-hero p{position:relative;margin:0 0 10px;color:#e5eef7}
+
+  .intro{
+    padding:18px;background:#fff; border-radius:12px;
+    display:grid; grid-template-columns: 1fr 320px; gap:18px; align-items:start;
+    font-size:1.08rem; line-height:1.6;
+  }
+  .intro .intro-text h3{margin:.2rem 0 .4rem; font-size:1.4rem}
+  .intro .intro-text p{margin:.4rem 0}
+  .intro .intro-text ul{margin:.4rem 0 0 1.2rem}
+  .intro .intro-fig{
+    border:1px solid var(--cinza-2); border-radius:12px; overflow:hidden; background:#f8fafc;
+  }
+  .intro .intro-fig img{ width:100%; height:100%; object-fit:cover; }
+
+  @media (max-width:860px){
+    .intro{ grid-template-columns: 1fr; }
   }
 
-  .afirmativas{margin-top:14px;display:flex;flex-direction:column;gap:14px}
+  /* ======== Narrativa & Likert ======== */
+  .narrativa{
+    background:var(--cinza);border:1px solid var(--cinza-2);padding:14px;border-radius:12px;color:#1f2937;
+    font-size:1.02rem;
+  }
+  .afirmativas{margin-top:12px;display:flex;flex-direction:column;gap:12px}
   .afirmativa{
-    border:1px solid var(--cinza-2);border-radius:12px;padding:12px;background:#fff;transition:transform .2s ease, box-shadow .2s ease;
+    border:1px solid var(--cinza-2);border-radius:12px;padding:10px;background:#fff;transition:transform .2s ease, box-shadow .2s ease;
   }
   .afirmativa:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(18,55,94,.08)}
-  .afirmativa p{margin:0 0 10px; overflow-wrap:anywhere;} /* ajuda a quebrar textos longos */
+  .afirmativa p{margin:0 0 8px; overflow-wrap:anywhere;}
 
-  /* ====== Escala ====== */
   .likert{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .scale{
     display:grid;grid-template-columns:repeat(5,1fr);
@@ -120,7 +189,7 @@
   .scale label small{
     position:static;
     font-weight:500;color:#64748b;font-size:.72rem;line-height:1.15;text-align:center;
-    white-space:normal; word-break:break-word; /* quebra “Concordo totalmente” */
+    white-space:normal; word-break:break-word;
   }
   .scale input:checked + label{
     border-color:var(--laranja);
@@ -128,22 +197,21 @@
     box-shadow:0 0 0 3px rgba(255,122,0,.15) inset, 0 8px 18px rgba(255,122,0,.08);
     color:#0b2a4a
   }
-  .scale input:focus-visible + label{
-    outline:3px solid #ffb56b; outline-offset:2px;
-  }
+  .scale input:focus-visible + label{ outline:3px solid #ffb56b; outline-offset:2px; }
 
   .legenda { display:none !important; }
 
-  .progress{ margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
+  .progress{ margin:12px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
   .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--laranja),#ff9d40);transition:width .4s ease}
 
+  /* ===== Footer fixo da view ===== */
   .footer{
-    display:flex;justify-content:space-between;gap:10px;padding:14px;background:#fff;border-top:1px solid #e5e7eb;border-radius:0 0 var(--radius) var(--radius)
+    display:flex;justify-content:space-between;gap:10px;padding:14px;background:#fff;border-top:1px solid #e5e7eb;
   }
   .btn{
     appearance:none;border:0;background:var(--azul);color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer;
     display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 22px rgba(11,42,74,.2);transition:transform .15s ease, filter .15s ease;
-    min-height:44px; /* altura uniforme */
+    min-height:44px;
   }
   .btn.secondary{background:#fff;color:var(--azul);border:1px solid var(--cinza-2);box-shadow:none}
   .btn.warn{background:var(--laranja)}
@@ -154,19 +222,20 @@
   .fade-exit{opacity:1;transform:none}
   .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
 
-  .feedback{padding:18px}
+  /* ===== Feedback / Relatório ===== */
+  .feedback{padding:18px; overflow:auto; min-height:0;}
   .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0}
   .pill.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
   .pill.mid{background:#fff7ed;color:var(--warn-dark);border:1px solid #fed7aa}
   .pill.low{background:#fef2f2;color:var(--risk-dark);border:1px solid #fecaca}
 
-  .feedback .stack { display:flex; flex-direction:column; gap:22px; }
-  .grid{display:grid;grid-template-columns:1fr;gap:22px}
-  @media (min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
+  .feedback .stack { display:flex; flex-direction:column; gap:16px; }
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:860px){ .grid{grid-template-columns:1fr} }
   .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
 
   .table-clean{ width:100%; border-collapse:separate; border-spacing:0 6px; }
-  .table-clean thead th{ text-align:left; font-weight:800; color:#334155; font-size:.92rem; padding:6px 8px; }
+  .table-clean thead th{ text-align:left; font-weight:800; color:#334155; font-size:.92rem; padding:6px 8px; position:sticky; top:0; background:#fff; z-index:1;}
   .table-clean tbody td{ background:#fff; padding:10px 8px; vertical-align:middle; }
   .table-clean tbody tr{ box-shadow:0 1px 0 #e5e7eb inset, 0 -1px 0 #e5e7eb inset; border-radius:8px; }
 
@@ -175,31 +244,29 @@
   .lvl.mid{ background:#fff7ed; color:var(--warn-dark); border:1px solid #fed7aa; }
   .lvl.low{ background:#fef2f2; color:var(--risk-dark); border:1px solid #fecaca; }
 
-  .checklist li{margin:8px 0}
+  /* Accordion (expandir/colapsar) */
+  details.acc{
+    border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:10px 12px; margin:8px 0;
+  }
+  details.acc summary{
+    cursor:pointer; list-style:none; font-weight:800; color:#0b2a4a; display:flex; align-items:center; gap:8px;
+  }
+  details.acc summary::marker{display:none;}
+  details.acc summary .chev{ transition: transform .2s ease; }
+  details.acc[open] summary .chev{ transform: rotate(90deg); }
+  .acc-body{ margin-top:8px; color:#334155; }
 
   /* Impressão */
   @media print{
     header, .footer, .progress, .btn, .logo { display:none !important; }
     body{background:#fff}
-    .card{box-shadow:none;border:0}
+    .card{box-shadow:none;border:0;height:auto}
+    .hero{ height:auto; }
+    .content, .feedback{ overflow:visible; }
   }
-
-  /* ===== CAPA & INTRO ===== */
-  .cover, .intro { display:flex;flex-direction:column;gap:16px;padding:18px;background:#fff; }
-  .cover-hero{
-    position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
-  }
-  .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;pointer-events:none}
-  .cover-title{position:relative}
-  .cover-title h2{margin:0;font-size:1.8rem}
-  .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5}
-
-  .intro h3{margin:0 0 6px}
-  .intro p{margin:6px 0}
-  .intro ul{margin:6px 0 0 1.2rem}
 
   /* ====================== RESPONSIVIDADE ====================== */
-  /* 1) Likert: empilha no mobile */
+  /* Likert: empilha no mobile */
   @media (max-width: 640px){ .scale{ grid-template-columns: 1fr 1fr; } }
   @media (max-width: 520px){
     .likert{ gap:8px; align-items:stretch; }
@@ -212,7 +279,7 @@
     .scale label small{ font-size:.70rem; }
   }
 
-  /* 2) Botões: padroniza no mobile */
+  /* Botões: padroniza no mobile */
   .footer > div{ display:flex; gap:10px; flex-wrap:wrap; }
   @media (max-width:560px){
     .footer{ flex-direction:column; align-items:stretch; }
@@ -375,7 +442,7 @@ function animateSwap(html){
   if(!root.firstChild){
     root.appendChild(next);
     requestAnimationFrame(()=>next.classList.add("fade-enter-active"));
-    requestAnimationFrame(sendHeightToParent); // informa o host
+    requestAnimationFrame(sendHeightToParent);
     return;
   }
   const current = root.firstChild;
@@ -386,7 +453,7 @@ function animateSwap(html){
     requestAnimationFrame(()=>{
       next.classList.add("fade-enter-active");
       next.classList.remove("fade-enter");
-      requestAnimationFrame(sendHeightToParent); // informa o host
+      requestAnimationFrame(sendHeightToParent);
     });
   }, 200);
 }
@@ -394,18 +461,23 @@ function animateSwap(html){
 /* ====== CAPA ====== */
 function renderCapa(){
   const html = `
-    <section class="view-capa">
-      <div class="cover">
-        <div class="cover-hero" role="img" aria-label="Capa do jogo Missão Empreendedora">
-          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
-               alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
-          <div class="cover-title">
+    <section class="view view-capa">
+      <div class="cover-hero" role="img" aria-label="Capa do jogo Missão Empreendedora">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
+             alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
+        <div class="cover-title">
+          <div class="icon-xl" aria-hidden="true">ME</div>
+          <div>
             <h2>Missão Empreendedora</h2>
-            <p>Descobrir seu perfil empreendedor</p>
+            <p>Decida com coragem • Descubra seu perfil empreendedor</p>
           </div>
         </div>
-        <p>Bem-vindo(a)! Este jogo foi pensado para você vivenciar desafios do comportamento empreendedor em um ambiente seguro e reflexivo.</p>
       </div>
+
+      <div class="content cover-intro">
+        <p>Bem-vindo(a)! Este jogo coloca você em dilemas reais do empreendedorismo para refletir sobre decisões, emoções e soft skills — sem risco, mas com muito aprendizado.</p>
+      </div>
+
       <div class="footer">
         <div></div>
         <div>
@@ -417,30 +489,45 @@ function renderCapa(){
   animateSwap(html);
 }
 
-/* ====== INTRODUÇÃO ====== */
+/* ====== INTRODUÇÃO (Orientações) ====== */
 function renderIntro(){
   const texto = `
-  <p>Você está prestes a entrar em uma experiência imersiva, onde cada escolha conta e cada decisão revela um pouco mais sobre o seu próprio empreendedor.</p>
-  <p>No O jogo Missão empreendedora, você encontrará cinco cenários com situações reais do mundo empreendedor: dilemas, tensões, oportunidades, conflitos e momentos de decisão sob pressão. Para cenário, terão afirmativas relacionadas a como você agiria naquela situação e você indicará seu nível de concordância com cada uma delas, “discordo totalmente” ao “concordo totalmente”.</p>
-  <p>Não existe resposta certa ou errada.<br>
-  O objetivo é diagnosticar seu estilo, reconhecer suas forças e identificar áreas de desenvolvimento.</p>
-  <p>Durante esse percurso, você explorará aspectos essenciais como:</p>
-  <ul>
-    <li>inteligência emocional,</li>
-    <li>comunicação assertiva,</li>
-    <li>liderança empática,</li>
-    <li>resiliência,</li>
-    <li>tomada de decisão em cenários incertos,</li>
-    <li>e o papel das soft skills no comportamento empreendedor.</li>
-  </ul>
-  <p><strong>Pronto(a) para avançar e conhecer sua própria forma de empreender?</strong></p>
+  <div class="intro-text">
+    <h3>Como funciona</h3>
+    <p>Você entrará em uma experiência imersiva onde cada escolha conta. São cinco cenários com situações reais do mundo empreendedor — dilemas, tensões, oportunidades e decisões sob pressão.</p>
+    <p>Em cada cenário, você verá três afirmativas e indicará seu nível de concordância de “discordo totalmente” a “concordo totalmente”.</p>
+    <p><strong>Não existe resposta certa ou errada.</strong> O objetivo é reconhecer forças e identificar oportunidades de desenvolvimento.</p>
+    <p>Durante o percurso, você explorará:</p>
+    <ul>
+      <li>inteligência emocional,</li>
+      <li>comunicação assertiva,</li>
+      <li>liderança empática,</li>
+      <li>resiliência,</li>
+      <li>tomada de decisão em cenários incertos,</li>
+      <li>e o papel das soft skills no comportamento empreendedor.</li>
+    </ul>
+  </div>
+  <figure class="intro-fig" aria-label="Imagem ilustrativa sobre orientação do jogo">
+    <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80" alt="Equipe colaborando em frente a um quadro kanban" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
+  </figure>
   `;
   const html = `
-    <section class="view-intro">
-      <div class="intro">
-        <h3>Como funciona</h3>
-        ${texto}
+    <section class="view view-intro">
+      <div class="intro-hero">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
+             alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
+        <div>
+          <h3>Orientações</h3>
+          <p>Leia as situações, reflita e responda com sinceridade.</p>
+        </div>
       </div>
+
+      <div class="content">
+        <div class="intro">
+          ${texto}
+        </div>
+      </div>
+
       <div class="footer">
         <div>
           <button class="btn secondary" id="btn-voltar-capa" type="button">Voltar</button>
@@ -459,13 +546,14 @@ function renderCenario(idx){
   const c = cenarios[idx];
   const progresso = Math.round(((idx)/cenarios.length)*100);
   const html = `
-    <article class="view-cenario">
+    <article class="view view-cenario">
       <div class="hero">
         <img src="${c.imagem}" alt=""
              onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
         <span class="badge">${idx+1} / ${cenarios.length}</span>
         <h2>${c.titulo}</h2>
       </div>
+
       <div class="content">
         <div class="narrativa">${c.narrativa}</div>
 
@@ -486,7 +574,7 @@ function renderCenario(idx){
           <button class="btn secondary" id="btn-recomecar" type="button">Recomeçar</button>
           ${idx<cenarios.length-1
             ? `<button class="btn avancar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-avancar" type="button">Avançar ▶</button>`
-            : `<button class="btn warn finalizar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-finalizar" type="button">Finalizar &amp; Ver Feedback</button>`
+            : `<button class="btn warn finalizar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-finalizar" type="button">Finalizar & Ver Feedback</button>`
           }
         </div>
       </div>
@@ -547,7 +635,6 @@ root.addEventListener("change", (e)=>{
         if(btnFinalizar && isCenarioCompleto(ci)) btnFinalizar.disabled = false;
       }
 
-      // pode alterar a altura -> notifica o host
       requestAnimationFrame(sendHeightToParent);
     }
   }
@@ -728,18 +815,30 @@ function renderFeedback(){
     `;
   }).join("");
 
-  const pontosFortes = d.pontosFortes.length
-    ? d.pontosFortes.map(k=>`<li>${objetivos[k]}</li>`).join("")
-    : `<li>Não há indicações</li>`;
+  const pontosFortesAcc = (d.pontosFortes.length
+    ? d.pontosFortes.map(k=>`
+        <details class="acc">
+          <summary><span class="chev">▶</span> ${k}. ${objetivos[k]} — <span class="pill ok">Ponto forte</span></summary>
+          <div class="acc-body">Continue reforçando práticas que mantêm sua consistência nesse critério. Busque compartilhar com a equipe como você faz.</div>
+        </details>
+      `).join("")
+    : `<p>Não há indicações.</p>`
+  );
 
-  const oportunidades = d.oportunidadesDetalhadas.length
-    ? d.oportunidadesDetalhadas.map(x=>`<li><strong>${x.k}. ${objetivos[x.k]} (${x.nivel})</strong>: ${x.texto}</li>`).join("")
-    : `<li>Não há indicações</li>`;
+  const oportunidadesAcc = (d.oportunidadesDetalhadas.length
+    ? d.oportunidadesDetalhadas.map(x=>`
+        <details class="acc">
+          <summary><span class="chev">▶</span> ${x.k}. ${objetivos[x.k]} — <span class="pill ${x.nivel==='Baixo'?'low':'mid'}">${x.nivel}</span></summary>
+          <div class="acc-body">${x.texto}</div>
+        </details>
+      `).join("")
+    : `<p>Não há indicações.</p>`
+  );
 
   const resumoGeral = avaliarResumoGeral(d);
 
   const html = `
-    <section class="view-feedback">
+    <section class="view view-feedback">
       <div class="hero">
         <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80"
              alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
@@ -749,46 +848,52 @@ function renderFeedback(){
 
       <div class="feedback">
         <div class="stack">
+
           <div class="box">
             <h3>🎯 1. Diagnóstico geral</h3>
             <p>${resumoGeral}</p>
-            <table class="table-clean" aria-label="Tabela de critérios com nota média e nível">
-              <thead>
-                <tr>
-                  <th>Critério</th>
-                  <th>Nota média</th>
-                  <th>Nível</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${linhasTabela}
-              </tbody>
-            </table>
+            <div style="max-height:260px; overflow:auto; border:1px solid #e5e7eb; border-radius:10px;">
+              <table class="table-clean" aria-label="Tabela de critérios com nota média e nível" style="width:100%;">
+                <thead>
+                  <tr>
+                    <th>Critério</th>
+                    <th>Nota média</th>
+                    <th>Nível</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${linhasTabela}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div class="grid">
             <div class="box">
-              <h3>✅ 2. Pontos Fortes Identificados</h3>
-              <ul>${pontosFortes}</ul>
+              <h3>✅ 2. Pontos Fortes</h3>
+              ${pontosFortesAcc}
             </div>
             <div class="box">
-              <h3>🔍 3. Oportunidades de Desenvolvimento</h3>
-              <ul>${oportunidades}</ul>
+              <h3>🔍 3. Oportunidades</h3>
+              ${oportunidadesAcc}
             </div>
           </div>
 
           <div class="box">
             <h3>💡 4. Recomendações</h3>
-            <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você analise desafios reais relacionados ao comportamento empreendedor. Aproveite os feedbacks indicados como ponto departida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a).</p>
-            <p><strong>Recomendações finais:</strong></p>
-            <ul class="checklist">
-              <li>Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.</li>
-              <li>Refaça o jogo selecionando alternativas diferentes para observar reações distintas.</li>
-              <li>Acesse os materiais complementares na UDA para aprofundar seus conhecimentos.</li>
-              <li>Registre suas percepções e construa um plano pessoal de melhoria em soft skills.</li>
-            </ul>
-            <p>Até a próxima!</p>
+            <details class="acc" open>
+              <summary><span class="chev">▶</span> Recomendações gerais</summary>
+              <div class="acc-body">
+                <ul class="checklist">
+                  <li>Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.</li>
+                  <li>Refaça o jogo selecionando alternativas diferentes para observar reações distintas.</li>
+                  <li>Acesse os materiais complementares na UDA para aprofundar seus conhecimentos.</li>
+                  <li>Registre percepções e construa um plano pessoal de melhoria em soft skills.</li>
+                </ul>
+              </div>
+            </details>
           </div>
+
         </div>
       </div>
 
