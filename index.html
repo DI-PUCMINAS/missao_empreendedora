@@ -16,9 +16,9 @@
     --cinza-2:#d7dde3;
     --texto:#0d1b2a;
     --neutro:#748cab;
-    --ok:#10b981;         /* Verde (Alto) */
-    --warn-dark:#a16207;  /* Amarelo escuro (Médio) */
-    --risk-dark:#7f1d1d;  /* Vermelho escuro (Baixo) */
+    --ok:#10b981;
+    --warn-dark:#a16207;
+    --risk-dark:#7f1d1d;
     --radius:14px;
     --shadow:0 10px 30px rgba(11,42,74,0.15);
   }
@@ -44,8 +44,9 @@
     width:42px;height:42px;border-radius:10px;background:var(--laranja);
     display:grid;place-items:center;color:var(--branco);font-weight:800;box-shadow:var(--shadow)
   }
-  .title h1{margin:0;font-size:1.4rem}
-  .title p{margin:4px 0 0;color:#e2e8f0;font-size:.95rem}
+  /* ↑ Aumentei o tamanho do título no topo */
+  .title h1{margin:0;font-size:1.95rem;line-height:1.15}
+  .title p{margin:4px 0 0;color:#e2e8f0;font-size:1rem}
   .card{
     background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
   }
@@ -149,23 +150,33 @@
   .btn.warn{background:var(--laranja)}
   .btn:disabled{opacity:.6;cursor:not-allowed;filter:grayscale(.2)}
 
-  /* Destaque do botão "Começar" */
-  #btn-comecar{
-    font-size:1.05rem;
-    padding:14px 22px;
-    background:linear-gradient(180deg,#0b2a4a 0%, #12375e 100%);
-    box-shadow:0 14px 26px rgba(11,42,74,.28);
+  /* ===== Destaques solicitados na capa ===== */
+  /* Redução do espaçamento entre parágrafos da CAPA */
+  .cover p{ margin:8px 0; }              /* ↓ antes era maior; agora mais “colado” */
+  .cover ul{ margin:8px 0 0 1.2rem; }    /* lista também mais próxima */
+
+  /* Frases centrais sem fundo, azul, mesma fonte, apenas maiores */
+  .emphasis-center{
+    text-align:center;
+    color:var(--azul);
+    font-size:1.15rem;   /* apenas maior, sem negrito */
+    font-weight:400;
+  }
+  /* “Bem-vindo(a)!” à esquerda, azul, maior, sem fundo */
+  .emphasis-left{
+    text-align:left;
+    color:var(--azul);
+    font-size:1.2rem;    /* um pouco mais de destaque */
+    font-weight:400;
   }
 
-  /* Destaques de frases */
-  .highlight{
-    display:inline-block;
-    background:#fff5e9;
-    border:1px solid #ffd7a8;
-    color:#7a3a00;
-    border-radius:10px;
-    padding:6px 10px;
-    font-weight:800;
+  /* Botão “Começar” ainda maior e mais chamativo */
+  #btn-comecar{
+    font-size:1.3rem;           /* bem maior */
+    padding:18px 28px;          /* mais alto/largo */
+    background:linear-gradient(180deg,#0b2a4a 0%, #12375e 100%);
+    box-shadow:0 16px 32px rgba(11,42,74,.28);
+    border-radius:14px;
   }
 
   .fade-enter{opacity:0;transform:translateY(8px)}
@@ -204,17 +215,16 @@
   }
 
   /* ===== CAPA ===== */
-  .cover { display:flex;flex-direction:column;gap:16px;padding:18px;background:#fff; }
+  .cover { display:flex;flex-direction:column;gap:12px;padding:18px;background:#fff; }
   .cover-hero{
     position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
   }
   .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;pointer-events:none}
   .cover-title{position:relative}
   .cover-title h2{margin:0;font-size:1.8rem}
-  .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5}
+  .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5;font-weight:400}
 
   /* ====================== RESPONSIVIDADE ====================== */
-  /* 1) Likert: empilha no mobile */
   @media (max-width: 640px){ .scale{ grid-template-columns: 1fr 1fr; } }
   @media (max-width: 520px){
     .likert{ gap:8px; align-items:stretch; }
@@ -222,17 +232,14 @@
     .scale label{ align-items:flex-start; text-align:left; padding:10px 12px; }
     .scale label small{ white-space:normal; word-break:break-word; }
   }
-  @media (max-width: 420px){
-    .scale label{ font-size:.88rem; }
-    .scale label small{ font-size:.70rem; }
-  }
-
-  /* 2) Botões: padroniza no mobile */
-  .footer > div{ display:flex; gap:10px; flex-wrap:wrap; }
-  @media (max-width:560px){
+  @media (max-width: 560px){
     .footer{ flex-direction:column; align-items:stretch; }
     .footer > div{ width:100%; }
     .footer .btn{ width:100%; justify-content:center; min-height:46px; }
+  }
+  @media (max-width: 420px){
+    .scale label{ font-size:.88rem; }
+    .scale label small{ font-size:.70rem; }
   }
 </style>
 </head>
@@ -258,6 +265,10 @@ const PALETA = { azul:"#0b2a4a", laranja:"#ff7a00", branco:"#ffffff" };
 
 // Fallback padrão de imagem (caso a original falhe)
 const IMG_FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80";
+
+/* Nova imagem para o cenário de chatbot (pessoa usando chat)
+   — pode trocar esta URL se preferir outra imagem específica */
+const IMG_CHATBOT = "https://images.unsplash.com/photo-1611162618071-b39a2ecf2e48?auto=format&fit=crop&w=1600&q=80";
 
 const cenarios = [
   {
@@ -302,8 +313,8 @@ const cenarios = [
   },
   {
     titulo: "Cenário 5: O Algoritmo Injusto",
-    /* Imagem substituída por uma opção estável que remete a IA/chatbot */
-    imagem: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1600&q=80",
+    /* Imagem substituída por uma que remete a pessoa utilizando um chatbot */
+    imagem: IMG_CHATBOT,
     narrativa: "Seu sistema de automação de atendimento digital começa a gerar reclamações por respostas impessoais. Seu sócio propõe manter o sistema assim para reduzir custos, mas você tem dúvidas éticas.",
     afirmativas: [
       { texto: "Considerei o impacto humano antes de apoiar o uso do sistema automatizado.", objetivos: [1,2] },
@@ -313,7 +324,7 @@ const cenarios = [
   }
 ];
 
-/* === Critérios atualizados conforme solicitado === */
+/* === Critérios atualizados === */
 const objetivos = {
   1: "Comportamento empreendedor e criação de valor",
   2: "Aplicação de soft skills no desempenho profissional",
@@ -328,7 +339,7 @@ const objetivos = {
 const STORAGE_KEY = "missaoEmpreendedora_v3";
 let estado = {
   etapa: 'capa', // 'capa' | 'jogo' | 'feedback'
-  atual: 0, // índice do cenário
+  atual: 0,
   respostas: Array.from({length: cenarios.length}, () => [null, null, null]),
   finalizado: false,
   diag: null
@@ -382,7 +393,6 @@ function sendHeightToParent(){
    Renderização
    ============== */
 const root = document.getElementById("root");
-function $(sel, ctx=document){ return ctx.querySelector(sel); }
 
 function animateSwap(html){
   const node = document.createElement("div");
@@ -407,31 +417,32 @@ function animateSwap(html){
   }, 200);
 }
 
-/* ====== CAPA (Página inicial única) ====== */
+/* ====== CAPA (Página inicial) ====== */
 function renderCapa(){
   const html = `
     <section class="view-capa">
       <div class="cover">
         <div class="cover-hero" role="img" aria-label="Capa do jogo Missão Empreendedora">
           <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
-               alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
+               alt=""
+               onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
           <div class="cover-title">
             <h2>Missão Empreendedora</h2>
-            <p>Missão Empreendedora: <strong>Decida com coragem</strong> e descubra seu perfil empreendedor</p>
+            <!-- Apenas a frase solicitada, sem negrito -->
+            <p>Decida com coragem e descubra seu perfil empreendedor</p>
           </div>
         </div>
 
-        <!-- Bem-vindo(a) sozinho na linha e em destaque -->
-        <p style="margin: 4px 0 0;">
-          <span class="highlight">Bem-vindo(a)!</span>
-        </p>
+        <!-- “Bem-vindo(a)!” à esquerda, azul, maior, sem fundo -->
+        <p class="emphasis-left">Bem-vindo(a)!</p>
 
-        <!-- Texto atualizado conforme solicitação -->
+        <!-- Texto atualizado com menor espaçamento entre parágrafos -->
         <p>Você está prestes a entrar em uma experiência imersiva, vivenciando desafios do comportamento empreendedor em um ambiente seguro e reflexivo.</p>
         <p>Serão apresentados cinco cenários com situações reais do mundo empreendedor envolvendo dilemas, tensões, oportunidades, conflitos e momentos de decisão sob pressão. Para cada cenário, terão afirmativas relacionadas a como você agiria naquela situação e você indicará seu nível de concordância com cada uma delas, do “discordo totalmente” ao “concordo totalmente”.</p>
 
-        <p><span class="highlight">Não existe resposta certa ou errada!</span><br>
-        O objetivo é diagnosticar seu estilo, reconhecer suas forças e identificar oportunidades de desenvolvimento.</p>
+        <!-- Frase centralizada, azul, mesma fonte, apenas maior -->
+        <p class="emphasis-center">Não existe resposta certa ou errada!</p>
+        <p>O objetivo é diagnosticar seu estilo, reconhecer suas forças e identificar oportunidades de desenvolvimento.</p>
 
         <p>Durante esse percurso, você explorará aspectos essenciais como:</p>
         <ul>
@@ -443,7 +454,8 @@ function renderCapa(){
           <li>papel das soft skills no comportamento empreendedor.</li>
         </ul>
 
-        <p><span class="highlight">Pronto(a) para avançar e conhecer sua própria forma de empreender?</span></p>
+        <!-- Frase centralizada, azul, mesma fonte, apenas maior -->
+        <p class="emphasis-center">Pronto(a) para avançar e conhecer sua própria forma de empreender?</p>
       </div>
 
       <div class="footer">
@@ -464,8 +476,7 @@ function renderCenario(idx){
   const html = `
     <article class="view-cenario">
       <div class="hero">
-        <img src="${c.imagem}" alt=""
-             onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
+        <img src="${c.imagem}" alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
         <span class="badge">${idx+1} / ${cenarios.length}</span>
         <h2>${c.titulo}</h2>
       </div>
@@ -532,6 +543,7 @@ function isCenarioCompleto(idx){
 }
 
 /* ====== EVENTOS ====== */
+const root = document.getElementById("root");
 root.addEventListener("change", (e)=>{
   const t = e.target;
   if(t && t.matches('input[type="radio"][data-ci][data-ai]')){
@@ -560,7 +572,6 @@ root.addEventListener("click", (e) => {
 
   switch (btn.id) {
     case "btn-comecar":
-      // vai direto para o jogo (página "Como funciona" foi removida)
       estado.etapa = "jogo";
       estado.atual = 0;
       salvarEstado();
