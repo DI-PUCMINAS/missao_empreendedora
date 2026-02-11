@@ -29,6 +29,7 @@
     font:16px/1.5 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     color:var(--texto);
     background:linear-gradient(180deg,#0b2a4a 0%,#0b2a4a 35%,#f6f9fc 35%,#f6f9fc 100%);
+    overflow-x:hidden; /* evita scroll horizontal eventual no mobile */
   }
   .app{
     max-width:960px;
@@ -49,10 +50,10 @@
     background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
   }
 
-  /* ======== HERO (imagem maior e centralizada) ======== */
+  /* ======== HERO ======== */
   .hero{
     position:relative;
-    height:340px;             /* Aumentado */
+    height:340px;
     background:var(--azul-2);
     color:#fff;display:flex;align-items:end;
     padding:18px 20px;border-bottom:1px solid #0b2a4a20;
@@ -79,7 +80,7 @@
 
   .content{padding:18px 18px 6px}
 
-  /* ======== Narrativa com destaque diferente ======== */
+  /* ======== Narrativa ======== */
   .narrativa{
     background:var(--cinza);border:1px solid var(--cinza-2);padding:16px;border-radius:12px;color:#1f2937;
     font-size:1.05rem;
@@ -90,9 +91,9 @@
     border:1px solid var(--cinza-2);border-radius:12px;padding:12px;background:#fff;transition:transform .2s ease, box-shadow .2s ease;
   }
   .afirmativa:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(18,55,94,.08)}
-  .afirmativa p{margin:0 0 10px}
+  .afirmativa p{margin:0 0 10px; overflow-wrap:anywhere;} /* ajuda a quebrar textos longos */
 
-  /* ====== Escala mais SLIM ====== */
+  /* ====== Escala ====== */
   .likert{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .scale{
     display:grid;grid-template-columns:repeat(5,1fr);
@@ -113,11 +114,13 @@
     min-height:44px;
     gap:4px;
     font-size:0.9rem;
+    text-align:center;
   }
   .scale label span{line-height:1}
   .scale label small{
     position:static;
-    font-weight:500;color:#64748b;font-size:.72rem;line-height:1.15;text-align:center
+    font-weight:500;color:#64748b;font-size:.72rem;line-height:1.15;text-align:center;
+    white-space:normal; word-break:break-word; /* quebra “Concordo totalmente” */
   }
   .scale input:checked + label{
     border-color:var(--laranja);
@@ -129,17 +132,18 @@
     outline:3px solid #ffb56b; outline-offset:2px;
   }
 
-  /* ===== Removida a legenda pós-afirmativas ===== */
   .legenda { display:none !important; }
 
   .progress{ margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
   .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--laranja),#ff9d40);transition:width .4s ease}
+
   .footer{
     display:flex;justify-content:space-between;gap:10px;padding:14px;background:#fff;border-top:1px solid #e5e7eb;border-radius:0 0 var(--radius) var(--radius)
   }
   .btn{
     appearance:none;border:0;background:var(--azul);color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer;
-    display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 22px rgba(11,42,74,.2);transition:transform .15s ease, filter .15s ease
+    display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 22px rgba(11,42,74,.2);transition:transform .15s ease, filter .15s ease;
+    min-height:44px; /* altura uniforme */
   }
   .btn.secondary{background:#fff;color:var(--azul);border:1px solid var(--cinza-2);box-shadow:none}
   .btn.warn{background:var(--laranja)}
@@ -156,37 +160,17 @@
   .pill.mid{background:#fff7ed;color:var(--warn-dark);border:1px solid #fed7aa}
   .pill.low{background:#fef2f2;color:var(--risk-dark);border:1px solid #fecaca}
 
-  /* ====== Espaçamento maior entre as caixas do relatório ====== */
-  .feedback .stack { display:flex; flex-direction:column; gap:22px; } /* mais espaço entre 1,2,3,4 */
-  .grid{display:grid;grid-template-columns:1fr;gap:22px} /* gap maior */
+  .feedback .stack { display:flex; flex-direction:column; gap:22px; }
+  .grid{display:grid;grid-template-columns:1fr;gap:22px}
   @media (min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
   .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
 
-  /* Tabela sem linhas de grade (diagnóstico geral) */
-  .table-clean{
-    width:100%;
-    border-collapse:separate;
-    border-spacing:0 6px; /* “linhas” separadas, sem borda */
-  }
-  .table-clean thead th{
-    text-align:left;
-    font-weight:800;
-    color:#334155;
-    font-size:.92rem;
-    padding:6px 8px;
-  }
-  .table-clean tbody td{
-    background:#fff;
-    padding:10px 8px;
-    vertical-align:middle;
-  }
-  .table-clean tbody tr{
-    box-shadow:0 1px 0 #e5e7eb inset, 0 -1px 0 #e5e7eb inset;
-    border-radius:8px;
-  }
-  .lvl{
-    display:inline-flex;align-items:center;font-weight:700;padding:4px 8px;border-radius:999px;font-size:.82rem
-  }
+  .table-clean{ width:100%; border-collapse:separate; border-spacing:0 6px; }
+  .table-clean thead th{ text-align:left; font-weight:800; color:#334155; font-size:.92rem; padding:6px 8px; }
+  .table-clean tbody td{ background:#fff; padding:10px 8px; vertical-align:middle; }
+  .table-clean tbody tr{ box-shadow:0 1px 0 #e5e7eb inset, 0 -1px 0 #e5e7eb inset; border-radius:8px; }
+
+  .lvl{ display:inline-flex;align-items:center;font-weight:700;padding:4px 8px;border-radius:999px;font-size:.82rem }
   .lvl.ok{ background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
   .lvl.mid{ background:#fff7ed; color:var(--warn-dark); border:1px solid #fed7aa; }
   .lvl.low{ background:#fef2f2; color:var(--risk-dark); border:1px solid #fecaca; }
@@ -201,9 +185,7 @@
   }
 
   /* ===== CAPA & INTRO ===== */
-  .cover, .intro {
-    display:flex;flex-direction:column;gap:16px;padding:18px;background:#fff;
-  }
+  .cover, .intro { display:flex;flex-direction:column;gap:16px;padding:18px;background:#fff; }
   .cover-hero{
     position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
   }
@@ -212,10 +194,31 @@
   .cover-title h2{margin:0;font-size:1.8rem}
   .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5}
 
-  /* Intro: reduzir espaçamentos entre parágrafos */
   .intro h3{margin:0 0 6px}
-  .intro p{margin:6px 0}           /* reduzido */
-  .intro ul{margin:6px 0 0 1.2rem}  /* reduzido */
+  .intro p{margin:6px 0}
+  .intro ul{margin:6px 0 0 1.2rem}
+
+  /* ====================== RESPONSIVIDADE ====================== */
+  /* 1) Likert: empilha no mobile */
+  @media (max-width: 640px){ .scale{ grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px){
+    .likert{ gap:8px; align-items:stretch; }
+    .scale{ grid-template-columns: 1fr; min-width:0; width:100%; }
+    .scale label{ align-items:flex-start; text-align:left; padding:10px 12px; }
+    .scale label small{ white-space:normal; word-break:break-word; }
+  }
+  @media (max-width: 420px){
+    .scale label{ font-size:.88rem; }
+    .scale label small{ font-size:.70rem; }
+  }
+
+  /* 2) Botões: padroniza no mobile */
+  .footer > div{ display:flex; gap:10px; flex-wrap:wrap; }
+  @media (max-width:560px){
+    .footer{ flex-direction:column; align-items:stretch; }
+    .footer > div{ width:100%; }
+    .footer .btn{ width:100%; justify-content:center; min-height:46px; }
+  }
 </style>
 </head>
 <body>
@@ -238,11 +241,13 @@
 
 const PALETA = { azul:"#0b2a4a", laranja:"#ff7a00", branco:"#ffffff" };
 
-/* Imagens atualizadas conforme o contexto solicitado */
+// Fallback padrão de imagem (caso a original falhe)
+const IMG_FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80";
+
 const cenarios = [
   {
     titulo: "Cenário 1: A Reunião Tensa",
-    imagem: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1600&auto=format&fit=crop", // reunião de equipe
+    imagem: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
     narrativa: "Você é convidado para uma reunião de urgência. A startup onde trabalha enfrenta uma crise de comunicação interna. O clima é tenso e todos aguardam que você proponha uma solução. Um colega levanta a voz, outro silencia. Você sente a pressão.",
     afirmativas: [
       { texto: "Tentei manter a calma e escutar com empatia cada colega antes de intervir.", objetivos: [3,4] },
@@ -252,7 +257,7 @@ const cenarios = [
   },
   {
     titulo: "Cenário 2: A Escolha do Sócio",
-    imagem: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1600&auto=format&fit=crop", // empreendedor tomando decisão
+    imagem: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80",
     narrativa: "Você precisa decidir entre dois sócios com perfis muito diferentes: um é tecnicamente brilhante, o outro é mais sensível e ético, porém com menos resultados práticos até agora.",
     afirmativas: [
       { texto: "Priorizei a confiança e a sinergia emocional, mesmo que isso implique em mais tempo para resultados.", objetivos: [2,3] },
@@ -262,7 +267,7 @@ const cenarios = [
   },
   {
     titulo: "Cenário 3: A Incerteza no Lançamento",
-    imagem: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1600&auto=format&fit=crop", // equipe analisando relatório em TV
+    imagem: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1600&q=80",
     narrativa: "Você está prestes a lançar um produto digital, mas uma nova tecnologia acaba de ser divulgada e pode tornar seu produto obsoleto. Sua equipe está dividida entre seguir ou adiar.",
     afirmativas: [
       { texto: "Fiz uma análise rápida e emocionalmente equilibrada sobre os riscos envolvidos.", objetivos: [3,5] },
@@ -272,7 +277,7 @@ const cenarios = [
   },
   {
     titulo: "Cenário 4: A Crítica em Público",
-    imagem: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1600&auto=format&fit=crop", // falando para pequeno público
+    imagem: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1600&q=80",
     narrativa: "Durante um evento de pitch, você é duramente criticado por um avaliador. A plateia fica em silêncio. Sua equipe te observa atentamente esperando sua reação.",
     afirmativas: [
       { texto: "Controlei minha reação imediata para evitar uma resposta impulsiva.", objetivos: [3,5] },
@@ -282,7 +287,8 @@ const cenarios = [
   },
   {
     titulo: "Cenário 5: O Algoritmo Injusto",
-    imagem: "https://images.unsplash.com/photo-1614064548018-0dbc1f1d8a1a?q=80&w=1600&auto=format&fit=crop", // pessoa conversando com chatbot
+    /* Imagem substituída por uma opção estável que remete a IA/chatbot */
+    imagem: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1600&q=80",
     narrativa: "Seu sistema de automação de atendimento digital começa a gerar reclamações por respostas impessoais. Seu sócio propõe manter o sistema assim para reduzir custos, mas você tem dúvidas éticas.",
     afirmativas: [
       { texto: "Considerei o impacto humano antes de apoiar o uso do sistema automatizado.", objetivos: [1,2] },
@@ -307,7 +313,7 @@ const STORAGE_KEY = "missaoEmpreendedora_v3";
 let estado = {
   etapa: 'capa', // 'capa' | 'intro' | 'jogo' | 'feedback'
   atual: 0, // índice do cenário
-  respostas: Array.from({length: cenarios.length}, () => [null, null, null]), // 5x3
+  respostas: Array.from({length: cenarios.length}, () => [null, null, null]),
   finalizado: false,
   diag: null
 };
@@ -332,6 +338,30 @@ function salvarEstado(){
 }
 carregarEstado();
 
+/* ======================
+   Auto-resize para iframe
+   ====================== */
+function docHeight(){
+  const b=document.body, d=document.documentElement;
+  return Math.max(b.scrollHeight,d.scrollHeight,b.offsetHeight,d.offsetHeight,b.clientHeight,d.clientHeight);
+}
+function sendHeightToParent(){
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: 'me:height', value: docHeight() }, '*');
+  }
+}
+(function(){
+  if (!(window.parent && window.parent !== window)) return;
+  const ro = new ResizeObserver(()=>requestAnimationFrame(sendHeightToParent));
+  ro.observe(document.documentElement);
+  window.addEventListener('load', sendHeightToParent);
+  window.addEventListener('resize', ()=>requestAnimationFrame(sendHeightToParent));
+  window.addEventListener('orientationchange', sendHeightToParent);
+  window.addEventListener('message', (e)=>{
+    if (e.data && e.data.type === 'me:ping') sendHeightToParent();
+  });
+})();
+
 /* ==============
    Renderização
    ============== */
@@ -345,6 +375,7 @@ function animateSwap(html){
   if(!root.firstChild){
     root.appendChild(next);
     requestAnimationFrame(()=>next.classList.add("fade-enter-active"));
+    requestAnimationFrame(sendHeightToParent); // informa o host
     return;
   }
   const current = root.firstChild;
@@ -355,6 +386,7 @@ function animateSwap(html){
     requestAnimationFrame(()=>{
       next.classList.add("fade-enter-active");
       next.classList.remove("fade-enter");
+      requestAnimationFrame(sendHeightToParent); // informa o host
     });
   }, 200);
 }
@@ -365,7 +397,8 @@ function renderCapa(){
     <section class="view-capa">
       <div class="cover">
         <div class="cover-hero" role="img" aria-label="Capa do jogo Missão Empreendedora">
-          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1600&auto=format&fit=crop" alt="" />
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
+               alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
           <div class="cover-title">
             <h2>Missão Empreendedora</h2>
             <p>Descobrir seu perfil empreendedor</p>
@@ -428,7 +461,8 @@ function renderCenario(idx){
   const html = `
     <article class="view-cenario">
       <div class="hero">
-        <img src="${c.imagem}" alt="" />
+        <img src="${c.imagem}" alt=""
+             onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
         <span class="badge">${idx+1} / ${cenarios.length}</span>
         <h2>${c.titulo}</h2>
       </div>
@@ -439,8 +473,6 @@ function renderCenario(idx){
           ${c.afirmativas.map((a,i)=>renderAfirmativa(idx,i,a,estado.respostas[idx][i])).join("")}
         </div>
 
-        <!-- Legenda removida -->
-
         <div class="progress" aria-label="Progresso do jogo">
           <span style="width:${progresso}%"></span>
         </div>
@@ -448,15 +480,13 @@ function renderCenario(idx){
 
       <div class="footer">
         <div>
-          <button class="btn secondary" ${idx===0?"disabled":""} id="btn-voltar" type="button">
-            ◀ Voltar
-          </button>
+          <button class="btn secondary" ${idx===0?"disabled":""} id="btn-voltar" type="button">◀ Voltar</button>
         </div>
         <div>
           <button class="btn secondary" id="btn-recomecar" type="button">Recomeçar</button>
           ${idx<cenarios.length-1
             ? `<button class="btn avancar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-avancar" type="button">Avançar ▶</button>`
-            : `<button class="btn warn finalizar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-finalizar" type="button">Finalizar & Ver Feedback</button>`
+            : `<button class="btn warn finalizar" ${(!isCenarioCompleto(idx)?"disabled":"")} id="btn-finalizar" type="button">Finalizar &amp; Ver Feedback</button>`
           }
         </div>
       </div>
@@ -511,11 +541,14 @@ root.addEventListener("change", (e)=>{
       salvarEstado();
 
       if(estado.etapa==='jogo' && ci===estado.atual){
-        const btnAvancar = $("#btn-avancar");
-        const btnFinalizar = $("#btn-finalizar");
+        const btnAvancar = document.getElementById("btn-avancar");
+        const btnFinalizar = document.getElementById("btn-finalizar");
         if(btnAvancar && isCenarioCompleto(ci)) btnAvancar.disabled = false;
         if(btnFinalizar && isCenarioCompleto(ci)) btnFinalizar.disabled = false;
       }
+
+      // pode alterar a altura -> notifica o host
+      requestAnimationFrame(sendHeightToParent);
     }
   }
 });
@@ -608,19 +641,17 @@ function calcularDiagnostico(){
 
   const tags = {};
   Object.entries(medias).forEach(([k, m])=>{
-    if(m >= 4.2) tags[k] = "ok";    // Alto
-    else if(m >= 3.0) tags[k] = "mid"; // Médio
-    else tags[k] = "low";           // Baixo
+    if(m >= 4.2) tags[k] = "ok";
+    else if(m >= 3.0) tags[k] = "mid";
+    else tags[k] = "low";
   });
 
-  // Pontos fortes (Alto)
   const pontosFortes = Object.keys(medias).filter(k=>tags[k]==="ok");
 
-  // Oportunidades: inclui mid e low
   const oportunidadesDetalhadas = Object.keys(medias)
     .filter(k=>tags[k]==="low" || tags[k]==="mid")
     .map(k=>{
-      const nivel = tags[k]; // "mid" ou "low"
+      const nivel = tags[k];
       const nivelLabel = nivel==="low" ? "Baixo" : "Médio";
       const texto = sugestaoPorNivel(Number(k), nivel);
       return { k, texto, nivel: nivelLabel };
@@ -684,7 +715,6 @@ function avaliarResumoGeral(d){
 function renderFeedback(){
   const d = estado.diag || calcularDiagnostico();
 
-  // Tabela sem linhas — Critério | Nota média | Nível
   const linhasTabela = Object.keys(objetivos).map(k=>{
     const nivelKey = d.tags[k]; // ok | mid | low
     const nivelLabel = nivelKey==="ok"?"Alto":nivelKey==="low"?"Baixo":"Médio";
@@ -698,12 +728,10 @@ function renderFeedback(){
     `;
   }).join("");
 
-  // Pontos fortes
   const pontosFortes = d.pontosFortes.length
     ? d.pontosFortes.map(k=>`<li>${objetivos[k]}</li>`).join("")
     : `<li>Não há indicações</li>`;
 
-  // Oportunidades (inclui Médio + Baixo)
   const oportunidades = d.oportunidadesDetalhadas.length
     ? d.oportunidadesDetalhadas.map(x=>`<li><strong>${x.k}. ${objetivos[x.k]} (${x.nivel})</strong>: ${x.texto}</li>`).join("")
     : `<li>Não há indicações</li>`;
@@ -713,14 +741,14 @@ function renderFeedback(){
   const html = `
     <section class="view-feedback">
       <div class="hero">
-        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80"
+             alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
         <span class="badge">Relatório</span>
         <h2>📊 Relatório do Jogo: Missão Empreendedora – Decida com Coragem</h2>
       </div>
 
       <div class="feedback">
         <div class="stack">
-          <!-- 1. Diagnóstico geral (título atualizado + tabela) -->
           <div class="box">
             <h3>🎯 1. Diagnóstico geral</h3>
             <p>${resumoGeral}</p>
@@ -749,11 +777,9 @@ function renderFeedback(){
             </div>
           </div>
 
-          <!-- 4. Recomendações padronizadas -->
           <div class="box">
             <h3>💡 4. Recomendações</h3>
             <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você analise desafios reais relacionados ao comportamento empreendedor. Aproveite os feedbacks indicados como ponto departida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a).</p>
-
             <p><strong>Recomendações finais:</strong></p>
             <ul class="checklist">
               <li>Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.</li>
