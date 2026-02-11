@@ -10,12 +10,10 @@
     --azul:#0b2a4a;
     --azul-2:#12375e;
     --laranja:#ff7a00;
-    --laranja-2:#ffa24a;
     --branco:#ffffff;
     --cinza:#f3f5f7;
     --cinza-2:#d7dde3;
     --texto:#0d1b2a;
-    --neutro:#748cab;
     --ok:#10b981;
     --warn-dark:#a16207;
     --risk-dark:#7f1d1d;
@@ -44,7 +42,7 @@
     width:42px;height:42px;border-radius:10px;background:var(--laranja);
     display:grid;place-items:center;color:var(--branco);font-weight:800;box-shadow:var(--shadow)
   }
-  /* ↑ Aumentei o tamanho do título no topo */
+  /* Título no topo MAIOR */
   .title h1{margin:0;font-size:1.95rem;line-height:1.15}
   .title p{margin:4px 0 0;color:#e2e8f0;font-size:1rem}
   .card{
@@ -133,10 +131,8 @@
     outline:3px solid #ffb56b; outline-offset:2px;
   }
 
-  .legenda { display:none !important; }
-
   .progress{ margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
-  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--laranja),#ff9d40);transition:width .4s ease}
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff7a00,#ff9d40);transition:width .4s ease}
 
   .footer{
     display:flex;justify-content:space-between;gap:10px;padding:14px;background:#fff;border-top:1px solid #e5e7eb;border-radius:0 0 var(--radius) var(--radius)
@@ -147,75 +143,38 @@
     min-height:44px;
   }
   .btn.secondary{background:#fff;color:var(--azul);border:1px solid var(--cinza-2);box-shadow:none}
-  .btn.warn{background:var(--laranja)}
+  .btn.warn{background:#ff7a00}
   .btn:disabled{opacity:.6;cursor:not-allowed;filter:grayscale(.2)}
 
-  /* ===== Destaques solicitados na capa ===== */
-  /* Redução do espaçamento entre parágrafos da CAPA */
-  .cover p{ margin:8px 0; }              /* ↓ antes era maior; agora mais “colado” */
-  .cover ul{ margin:8px 0 0 1.2rem; }    /* lista também mais próxima */
+  /* ======== FORMATAÇÕES SOLICITADAS NA PRIMEIRA PÁGINA ======== */
+  .cover { display:flex;flex-direction:column;gap:12px;padding:18px;background:#fff; }
+  .cover p{ margin:8px 0; }              /* Menor espaçamento entre parágrafos */
+  .cover ul{ margin:8px 0 0 1.2rem; }
 
   /* Frases centrais sem fundo, azul, mesma fonte, apenas maiores */
   .emphasis-center{
     text-align:center;
     color:var(--azul);
-    font-size:1.15rem;   /* apenas maior, sem negrito */
+    font-size:1.15rem;
     font-weight:400;
   }
   /* “Bem-vindo(a)!” à esquerda, azul, maior, sem fundo */
   .emphasis-left{
     text-align:left;
     color:var(--azul);
-    font-size:1.2rem;    /* um pouco mais de destaque */
+    font-size:1.2rem;
     font-weight:400;
   }
-
-  /* Botão “Começar” ainda maior e mais chamativo */
+  /* Botão “Começar” bem maior e chamativo no final da capa */
   #btn-comecar{
-    font-size:1.3rem;           /* bem maior */
-    padding:18px 28px;          /* mais alto/largo */
+    font-size:1.3rem;
+    padding:18px 28px;
     background:linear-gradient(180deg,#0b2a4a 0%, #12375e 100%);
     box-shadow:0 16px 32px rgba(11,42,74,.28);
     border-radius:14px;
   }
 
-  .fade-enter{opacity:0;transform:translateY(8px)}
-  .fade-enter-active{opacity:1;transform:none;transition:all .35s ease}
-  .fade-exit{opacity:1;transform:none}
-  .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
-
-  .feedback{padding:18px}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0}
-  .pill.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
-  .pill.mid{background:#fff7ed;color:var(--warn-dark);border:1px solid #fed7aa}
-  .pill.low{background:#fef2f2;color:var(--risk-dark);border:1px solid #fecaca}
-
-  .feedback .stack { display:flex; flex-direction:column; gap:22px; }
-  .grid{display:grid;grid-template-columns:1fr;gap:22px}
-  @media (min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
-  .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
-
-  .table-clean{ width:100%; border-collapse:separate; border-spacing:0 6px; }
-  .table-clean thead th{ text-align:left; font-weight:800; color:#334155; font-size:.92rem; padding:6px 8px; }
-  .table-clean tbody td{ background:#fff; padding:10px 8px; vertical-align:middle; }
-  .table-clean tbody tr{ box-shadow:0 1px 0 #e5e7eb inset, 0 -1px 0 #e5e7eb inset; border-radius:8px; }
-
-  .lvl{ display:inline-flex;align-items:center;font-weight:700;padding:4px 8px;border-radius:999px;font-size:.82rem }
-  .lvl.ok{ background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
-  .lvl.mid{ background:#fff7ed; color:var(--warn-dark); border:1px solid #fed7aa; }
-  .lvl.low{ background:#fef2f2; color:var(--risk-dark); border:1px solid #fecaca; }
-
-  .checklist li{margin:8px 0}
-
-  /* Impressão */
-  @media print{
-    header, .footer, .progress, .btn, .logo { display:none !important; }
-    body{background:#fff}
-    .card{box-shadow:none;border:0}
-  }
-
-  /* ===== CAPA ===== */
-  .cover { display:flex;flex-direction:column;gap:12px;padding:18px;background:#fff; }
+  /* Capa hero */
   .cover-hero{
     position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
   }
@@ -224,22 +183,29 @@
   .cover-title h2{margin:0;font-size:1.8rem}
   .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5;font-weight:400}
 
-  /* ====================== RESPONSIVIDADE ====================== */
-  @media (max-width: 640px){ .scale{ grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 520px){
-    .likert{ gap:8px; align-items:stretch; }
-    .scale{ grid-template-columns: 1fr; min-width:0; width:100%; }
-    .scale label{ align-items:flex-start; text-align:left; padding:10px 12px; }
-    .scale label small{ white-space:normal; word-break:break-word; }
+  /* Animações e responsividade */
+  .fade-enter{opacity:0;transform:translateY(8px)}
+  .fade-enter-active{opacity:1;transform:none;transition:all .35s ease}
+  .fade-exit{opacity:1;transform:none}
+  .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
+
+  .feedback{padding:18px}
+  .grid{display:grid;grid-template-columns:1fr;gap:22px}
+  @media (min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
+  .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
+
+  @media print{
+    header, .footer, .progress, .btn, .logo { display:none !important; }
+    body{background:#fff}
+    .card{box-shadow:none;border:0}
   }
-  @media (max-width: 560px){
+
+  /* Botões no mobile */
+  .footer > div{ display:flex; gap:10px; flex-wrap:wrap; }
+  @media (max-width:560px){
     .footer{ flex-direction:column; align-items:stretch; }
     .footer > div{ width:100%; }
     .footer .btn{ width:100%; justify-content:center; min-height:46px; }
-  }
-  @media (max-width: 420px){
-    .scale label{ font-size:.88rem; }
-    .scale label small{ font-size:.70rem; }
   }
 </style>
 </head>
@@ -266,8 +232,7 @@ const PALETA = { azul:"#0b2a4a", laranja:"#ff7a00", branco:"#ffffff" };
 // Fallback padrão de imagem (caso a original falhe)
 const IMG_FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80";
 
-/* Nova imagem para o cenário de chatbot (pessoa usando chat)
-   — pode trocar esta URL se preferir outra imagem específica */
+/* Nova imagem para o cenário 5 (pessoa usando chatbot) */
 const IMG_CHATBOT = "https://images.unsplash.com/photo-1611162618071-b39a2ecf2e48?auto=format&fit=crop&w=1600&q=80";
 
 const cenarios = [
@@ -313,7 +278,6 @@ const cenarios = [
   },
   {
     titulo: "Cenário 5: O Algoritmo Injusto",
-    /* Imagem substituída por uma que remete a pessoa utilizando um chatbot */
     imagem: IMG_CHATBOT,
     narrativa: "Seu sistema de automação de atendimento digital começa a gerar reclamações por respostas impessoais. Seu sócio propõe manter o sistema assim para reduzir custos, mas você tem dúvidas éticas.",
     afirmativas: [
@@ -324,7 +288,7 @@ const cenarios = [
   }
 ];
 
-/* === Critérios atualizados === */
+/* Critérios (já atualizados em versão anterior e mantidos) */
 const objetivos = {
   1: "Comportamento empreendedor e criação de valor",
   2: "Aplicação de soft skills no desempenho profissional",
@@ -365,9 +329,7 @@ function salvarEstado(){
 }
 carregarEstado();
 
-/* ======================
-   Auto-resize para iframe
-   ====================== */
+/* Auto-resize para iframe */
 function docHeight(){
   const b=document.body, d=document.documentElement;
   return Math.max(b.scrollHeight,d.scrollHeight,b.offsetHeight,d.offsetHeight,b.clientHeight,d.clientHeight);
@@ -389,10 +351,8 @@ function sendHeightToParent(){
   });
 })();
 
-/* ==============
-   Renderização
-   ============== */
-const root = document.getElementById("root");
+/* Renderização */
+const root = document.getElementById("root"); // <— única declaração
 
 function animateSwap(html){
   const node = document.createElement("div");
@@ -417,30 +377,25 @@ function animateSwap(html){
   }, 200);
 }
 
-/* ====== CAPA (Página inicial) ====== */
+/* ====== CAPA ====== */
 function renderCapa(){
   const html = `
     <section class="view-capa">
       <div class="cover">
         <div class="cover-hero" role="img" aria-label="Capa do jogo Missão Empreendedora">
           <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
-               alt=""
-               onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
+               alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
           <div class="cover-title">
             <h2>Missão Empreendedora</h2>
-            <!-- Apenas a frase solicitada, sem negrito -->
             <p>Decida com coragem e descubra seu perfil empreendedor</p>
           </div>
         </div>
 
-        <!-- “Bem-vindo(a)!” à esquerda, azul, maior, sem fundo -->
         <p class="emphasis-left">Bem-vindo(a)!</p>
 
-        <!-- Texto atualizado com menor espaçamento entre parágrafos -->
         <p>Você está prestes a entrar em uma experiência imersiva, vivenciando desafios do comportamento empreendedor em um ambiente seguro e reflexivo.</p>
         <p>Serão apresentados cinco cenários com situações reais do mundo empreendedor envolvendo dilemas, tensões, oportunidades, conflitos e momentos de decisão sob pressão. Para cada cenário, terão afirmativas relacionadas a como você agiria naquela situação e você indicará seu nível de concordância com cada uma delas, do “discordo totalmente” ao “concordo totalmente”.</p>
 
-        <!-- Frase centralizada, azul, mesma fonte, apenas maior -->
         <p class="emphasis-center">Não existe resposta certa ou errada!</p>
         <p>O objetivo é diagnosticar seu estilo, reconhecer suas forças e identificar oportunidades de desenvolvimento.</p>
 
@@ -454,7 +409,6 @@ function renderCapa(){
           <li>papel das soft skills no comportamento empreendedor.</li>
         </ul>
 
-        <!-- Frase centralizada, azul, mesma fonte, apenas maior -->
         <p class="emphasis-center">Pronto(a) para avançar e conhecer sua própria forma de empreender?</p>
       </div>
 
@@ -543,7 +497,6 @@ function isCenarioCompleto(idx){
 }
 
 /* ====== EVENTOS ====== */
-const root = document.getElementById("root");
 root.addEventListener("change", (e)=>{
   const t = e.target;
   if(t && t.matches('input[type="radio"][data-ci][data-ai]')){
@@ -572,13 +525,14 @@ root.addEventListener("click", (e) => {
 
   switch (btn.id) {
     case "btn-comecar":
+      // Vai direto para o jogo (página "Como funciona" foi removida anteriormente)
       estado.etapa = "jogo";
       estado.atual = 0;
       salvarEstado();
       renderCenario(0);
       break;
 
-    case "btn-voltar":
+  case "btn-voltar":
       onPrev();
       break;
 
@@ -592,9 +546,6 @@ root.addEventListener("click", (e) => {
 
     case "btn-finalizar":
       finalizar();
-      break;
-
-    default:
       break;
   }
 });
@@ -780,8 +731,7 @@ function renderFeedback(){
 
           <div class="box">
             <h3>💡 4. Recomendações</h3>
-            <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você analise desafios reais relacionados ao comportamento empreendedor. Aproveite os feedbacks indicados como ponto departida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a).</p>
-            <p><strong>Recomendações finais:</strong></p>
+            <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você analise desafios reais relacionados ao comportamento empreendedor. Aproveite os feedbacks indicados como ponto de partida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a).</p>
             <ul class="checklist">
               <li>Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.</li>
               <li>Refaça o jogo selecionando alternativas diferentes para observar reações distintas.</li>
@@ -815,3 +765,4 @@ else { renderCapa(); }
 </script>
 </body>
 </html>
+
