@@ -16,9 +16,9 @@
     --cinza-2:#d7dde3;
     --texto:#0d1b2a;
     --neutro:#748cab;
-    --ok:#10b981;
-    --warn:#f59e0b;
-    --risk:#ef4444;
+    --ok:#10b981;         /* Verde (Alto) */
+    --warn-dark:#a16207;  /* Amarelo escuro (Médio) */
+    --risk-dark:#7f1d1d;  /* Vermelho escuro (Baixo) */
     --radius:14px;
     --shadow:0 10px 30px rgba(11,42,74,0.15);
   }
@@ -48,62 +48,90 @@
   .card{
     background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
   }
+
+  /* ======== HERO (imagem maior e centralizada) ======== */
   .hero{
-    position:relative;height:220px;background:var(--azul-2);color:#fff;display:flex;align-items:end;
+    position:relative;
+    height:340px;             /* Aumentado */
+    background:var(--azul-2);
+    color:#fff;display:flex;align-items:end;
     padding:18px 20px;border-bottom:1px solid #0b2a4a20;
+  }
+  @media (min-width:860px){
+    .hero{height:400px;}
   }
   .hero img{
     position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-    opacity:.32;filter:saturate(.9) contrast(1.05);
-    pointer-events:none; /* não intercepta cliques */
+    object-position:center center;
+    opacity:.40;filter:saturate(.95) contrast(1.05);
+    pointer-events:none;
   }
   .hero .badge{
     position:absolute;top:12px;left:12px;background:rgba(255,122,0,.95);color:#fff;padding:6px 10px;border-radius:999px;
     font-weight:700;box-shadow:0 6px 18px rgba(255,122,0,.35);font-size:.9rem
   }
-  .hero h2{position:relative;margin:0;font-size:1.35rem;text-shadow:0 2px 10px rgba(0,0,0,.3)}
-  .content{padding:18px 18px 6px}
-  .narrativa{
-    background:var(--cinza);border:1px solid var(--cinza-2);padding:14px;border-radius:12px;color:#1f2937
+  .hero h2{
+    position:relative;margin:0;
+    font-size:1.65rem;
+    line-height:1.2;
+    text-shadow:0 2px 10px rgba(0,0,0,.35)
   }
+
+  .content{padding:18px 18px 6px}
+
+  /* ======== Narrativa com destaque diferente ======== */
+  .narrativa{
+    background:var(--cinza);border:1px solid var(--cinza-2);padding:16px;border-radius:12px;color:#1f2937;
+    font-size:1.05rem;
+  }
+
   .afirmativas{margin-top:14px;display:flex;flex-direction:column;gap:14px}
   .afirmativa{
     border:1px solid var(--cinza-2);border-radius:12px;padding:12px;background:#fff;transition:transform .2s ease, box-shadow .2s ease;
   }
   .afirmativa:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(18,55,94,.08)}
   .afirmativa p{margin:0 0 10px}
+
+  /* ====== Escala mais SLIM ====== */
   .likert{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .scale{
-    display:grid;grid-template-columns:repeat(5,1fr);gap:8px;flex:1;min-width:260px
+    display:grid;grid-template-columns:repeat(5,1fr);
+    gap:6px;
+    flex:1;min-width:260px
   }
-
-  /* ======= ACESSIBILIDADE + ESPAÇAMENTO DA ESCALA ======= */
   .scale input{
-    /* Mantém focável para leitores de tela, mas invisível visualmente */
-    position:absolute;
-    width:1px;height:1px;margin:-1px;padding:0;border:0;
+    position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
     clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap;
   }
   .scale label{
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    padding:12px 10px;border:1px solid var(--cinza-2);border-radius:10px;background:#fff;cursor:pointer;
-    user-select:none;font-weight:700;color:#334155;transition:all .15s ease;min-height:64px;
-    gap:6px; /* ✅ Espaçamento entre número e o rótulo */
+    padding:8px 8px;
+    border:1px solid var(--cinza-2);
+    border-radius:8px;
+    background:#fff;cursor:pointer;
+    user-select:none;font-weight:700;color:#334155;transition:all .15s ease;
+    min-height:44px;
+    gap:4px;
+    font-size:0.9rem;
   }
+  .scale label span{line-height:1}
   .scale label small{
-    position:static; /* ✅ sem absolute — melhora leitura e espaçamento */
-    font-weight:500;color:#64748b;font-size:.78rem;line-height:1.1;text-align:center
+    position:static;
+    font-weight:500;color:#64748b;font-size:.72rem;line-height:1.15;text-align:center
   }
   .scale input:checked + label{
-    border-color:var(--laranja);background:linear-gradient(180deg,#fff 0%,#fff 35%,#fff0 100%), rgba(255,122,0,.08);
+    border-color:var(--laranja);
+    background:linear-gradient(180deg,#fff 0%,#fff 35%,#fff0 100%), rgba(255,122,0,.08);
     box-shadow:0 0 0 3px rgba(255,122,0,.15) inset, 0 8px 18px rgba(255,122,0,.08);
     color:#0b2a4a
   }
   .scale input:focus-visible + label{
-    outline:3px solid #ffb56b; outline-offset:2px; /* foco visível */
+    outline:3px solid #ffb56b; outline-offset:2px;
   }
 
-  .legenda{font-size:.85rem;color:#475569;display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
+  /* ===== Removida a legenda pós-afirmativas ===== */
+  .legenda { display:none !important; }
+
   .progress{ margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
   .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--laranja),#ff9d40);transition:width .4s ease}
   .footer{
@@ -116,19 +144,55 @@
   .btn.secondary{background:#fff;color:var(--azul);border:1px solid var(--cinza-2);box-shadow:none}
   .btn.warn{background:var(--laranja)}
   .btn:disabled{opacity:.6;cursor:not-allowed;filter:grayscale(.2)}
+
   .fade-enter{opacity:0;transform:translateY(8px)}
   .fade-enter-active{opacity:1;transform:none;transition:all .35s ease}
   .fade-exit{opacity:1;transform:none}
   .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
+
   .feedback{padding:18px}
   .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0}
-  .pill.ok{background:#ecfdf5;color:#065f46}
-  .pill.mid{background:#fff7ed;color:#9a3412}
-  .pill.low{background:#fef2f2;color:#7f1d1d}
-  .grid{display:grid;grid-template-columns:1fr;gap:14px}
-  @media (min-width:860px){ .grid{grid-template-columns:1.1fr .9fr} }
+  .pill.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+  .pill.mid{background:#fff7ed;color:var(--warn-dark);border:1px solid #fed7aa}
+  .pill.low{background:#fef2f2;color:var(--risk-dark);border:1px solid #fecaca}
+
+  /* ====== Espaçamento maior entre as caixas do relatório ====== */
+  .feedback .stack { display:flex; flex-direction:column; gap:22px; } /* mais espaço entre 1,2,3,4 */
+  .grid{display:grid;grid-template-columns:1fr;gap:22px} /* gap maior */
+  @media (min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
   .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
+
+  /* Tabela sem linhas de grade (diagnóstico geral) */
+  .table-clean{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 6px; /* “linhas” separadas, sem borda */
+  }
+  .table-clean thead th{
+    text-align:left;
+    font-weight:800;
+    color:#334155;
+    font-size:.92rem;
+    padding:6px 8px;
+  }
+  .table-clean tbody td{
+    background:#fff;
+    padding:10px 8px;
+    vertical-align:middle;
+  }
+  .table-clean tbody tr{
+    box-shadow:0 1px 0 #e5e7eb inset, 0 -1px 0 #e5e7eb inset;
+    border-radius:8px;
+  }
+  .lvl{
+    display:inline-flex;align-items:center;font-weight:700;padding:4px 8px;border-radius:999px;font-size:.82rem
+  }
+  .lvl.ok{ background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+  .lvl.mid{ background:#fff7ed; color:var(--warn-dark); border:1px solid #fed7aa; }
+  .lvl.low{ background:#fef2f2; color:var(--risk-dark); border:1px solid #fecaca; }
+
   .checklist li{margin:8px 0}
+
   /* Impressão */
   @media print{
     header, .footer, .progress, .btn, .logo { display:none !important; }
@@ -147,9 +211,11 @@
   .cover-title{position:relative}
   .cover-title h2{margin:0;font-size:1.8rem}
   .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5}
-  .intro h3{margin:0 0 8px}
-  .intro p{margin:8px 0}
-  .intro ul{margin:8px 0 0 1.2rem}
+
+  /* Intro: reduzir espaçamentos entre parágrafos */
+  .intro h3{margin:0 0 6px}
+  .intro p{margin:6px 0}           /* reduzido */
+  .intro ul{margin:6px 0 0 1.2rem}  /* reduzido */
 </style>
 </head>
 <body>
@@ -172,10 +238,11 @@
 
 const PALETA = { azul:"#0b2a4a", laranja:"#ff7a00", branco:"#ffffff" };
 
+/* Imagens atualizadas conforme o contexto solicitado */
 const cenarios = [
   {
     titulo: "Cenário 1: A Reunião Tensa",
-    imagem: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1600&auto=format&fit=crop", // reunião de equipe
     narrativa: "Você é convidado para uma reunião de urgência. A startup onde trabalha enfrenta uma crise de comunicação interna. O clima é tenso e todos aguardam que você proponha uma solução. Um colega levanta a voz, outro silencia. Você sente a pressão.",
     afirmativas: [
       { texto: "Tentei manter a calma e escutar com empatia cada colega antes de intervir.", objetivos: [3,4] },
@@ -185,7 +252,7 @@ const cenarios = [
   },
   {
     titulo: "Cenário 2: A Escolha do Sócio",
-    imagem: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1600&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1600&auto=format&fit=crop", // empreendedor tomando decisão
     narrativa: "Você precisa decidir entre dois sócios com perfis muito diferentes: um é tecnicamente brilhante, o outro é mais sensível e ético, porém com menos resultados práticos até agora.",
     afirmativas: [
       { texto: "Priorizei a confiança e a sinergia emocional, mesmo que isso implique em mais tempo para resultados.", objetivos: [2,3] },
@@ -195,7 +262,7 @@ const cenarios = [
   },
   {
     titulo: "Cenário 3: A Incerteza no Lançamento",
-    imagem: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1600&auto=format&fit=crop", // equipe analisando relatório em TV
     narrativa: "Você está prestes a lançar um produto digital, mas uma nova tecnologia acaba de ser divulgada e pode tornar seu produto obsoleto. Sua equipe está dividida entre seguir ou adiar.",
     afirmativas: [
       { texto: "Fiz uma análise rápida e emocionalmente equilibrada sobre os riscos envolvidos.", objetivos: [3,5] },
@@ -205,7 +272,7 @@ const cenarios = [
   },
   {
     titulo: "Cenário 4: A Crítica em Público",
-    imagem: "https://images.unsplash.com/photo-1485217988980-11786ced9454?q=80&w=1600&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1600&auto=format&fit=crop", // falando para pequeno público
     narrativa: "Durante um evento de pitch, você é duramente criticado por um avaliador. A plateia fica em silêncio. Sua equipe te observa atentamente esperando sua reação.",
     afirmativas: [
       { texto: "Controlei minha reação imediata para evitar uma resposta impulsiva.", objetivos: [3,5] },
@@ -215,7 +282,7 @@ const cenarios = [
   },
   {
     titulo: "Cenário 5: O Algoritmo Injusto",
-    imagem: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop",
+    imagem: "https://images.unsplash.com/photo-1614064548018-0dbc1f1d8a1a?q=80&w=1600&auto=format&fit=crop", // pessoa conversando com chatbot
     narrativa: "Seu sistema de automação de atendimento digital começa a gerar reclamações por respostas impessoais. Seu sócio propõe manter o sistema assim para reduzir custos, mas você tem dúvidas éticas.",
     afirmativas: [
       { texto: "Considerei o impacto humano antes de apoiar o uso do sistema automatizado.", objetivos: [1,2] },
@@ -372,13 +439,7 @@ function renderCenario(idx){
           ${c.afirmativas.map((a,i)=>renderAfirmativa(idx,i,a,estado.respostas[idx][i])).join("")}
         </div>
 
-        <div class="legenda" aria-hidden="true">
-          <span><strong>1</strong> – Discordo totalmente</span>
-          <span><strong>2</strong> – Discordo parcialmente</span>
-          <span><strong>3</strong> – Neutro</span>
-          <span><strong>4</strong> – Concordo parcialmente</span>
-          <span><strong>5</strong> – Concordo totalmente</span>
-        </div>
+        <!-- Legenda removida -->
 
         <div class="progress" aria-label="Progresso do jogo">
           <span style="width:${progresso}%"></span>
@@ -438,8 +499,6 @@ function isCenarioCompleto(idx){
 }
 
 /* ====== EVENTOS ====== */
-
-/* Marcação da escala (delegação) — corrige bug de cenários seguintes */
 root.addEventListener("change", (e)=>{
   const t = e.target;
   if(t && t.matches('input[type="radio"][data-ci][data-ai]')){
@@ -461,7 +520,6 @@ root.addEventListener("change", (e)=>{
   }
 });
 
-/* Cliques — delegação centralizada (robusta em re-renderizações) */
 root.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -550,29 +608,59 @@ function calcularDiagnostico(){
 
   const tags = {};
   Object.entries(medias).forEach(([k, m])=>{
-    if(m >= 4.2) tags[k] = "ok";
-    else if(m >= 3.0) tags[k] = "mid";
-    else tags[k] = "low";
+    if(m >= 4.2) tags[k] = "ok";    // Alto
+    else if(m >= 3.0) tags[k] = "mid"; // Médio
+    else tags[k] = "low";           // Baixo
   });
 
+  // Pontos fortes (Alto)
   const pontosFortes = Object.keys(medias).filter(k=>tags[k]==="ok");
-  const oportunidades = Object.keys(medias).filter(k=>tags[k]==="low");
 
-  const recomenda = [];
-  const addRec = (k, txt)=>recomenda.push({obj:k, texto:txt});
+  // Oportunidades: inclui mid e low
+  const oportunidadesDetalhadas = Object.keys(medias)
+    .filter(k=>tags[k]==="low" || tags[k]==="mid")
+    .map(k=>{
+      const nivel = tags[k]; // "mid" ou "low"
+      const nivelLabel = nivel==="low" ? "Baixo" : "Médio";
+      const texto = sugestaoPorNivel(Number(k), nivel);
+      return { k, texto, nivel: nivelLabel };
+    });
 
-  if(tags[1]==="low") addRec(1,"Reforce práticas de visão de valor: ao decidir, explicite como a ação proposta cria valor para clientes e equipe. Registre hipóteses de impacto.");
-  if(tags[2]==="low") addRec(2,"Pratique soft skills em micro-rotinas: feedbacks curtos semanais, reuniões de 15’ com turnos de fala e acordos de convivência.");
-  if(tags[3]==="low") addRec(3,"Treine regulação emocional: respiração box, pausa de 90 segundos antes de responder e nomeação de emoções (‘sinto X, porque Y’).");
-  if(tags[4]==="low") addRec(4,"Aprimore comunicação empática: resuma o que ouviu antes de propor, use perguntas abertas e defina ‘próximos passos’ explícitos.");
-  if(tags[5]==="low") addRec(5,"Estruture decisões sob pressão: use uma matriz impacto × risco em 5 minutos; valide com 1 pessoa crítica antes de anunciar.");
-  if(tags[6]==="low") addRec(6,"Conecte soft skills à inovação: faça sessões de brainstorming com regras de escuta e documentação de aprendizados pós-teste.");
-  if(tags[7]==="low") addRec(7,"Aplique ferramentas de autoconhecimento: diário de bordo, teste VIA ou Big Five e um plano de 30 dias com uma habilidade foco.");
-  if(recomenda.length===0){
-    addRec(0,"Você demonstrou consistência. Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.");
-  }
+  return { medias, tags, pontosFortes, oportunidadesDetalhadas };
+}
 
-  return { medias, tags, pontosFortes, oportunidades, recomenda };
+function sugestaoPorNivel(k, nivel) {
+  const base = {
+    1: {
+      low: "Reforce práticas de visão de valor: ao decidir, explicite como a ação proposta cria valor para clientes e equipe. Registre hipóteses de impacto.",
+      mid: "Conecte decisões ao valor gerado: explicite quem se beneficia e como medir resultados em ciclos curtos."
+    },
+    2: {
+      low: "Pratique soft skills em micro-rotinas: feedbacks curtos semanais, reuniões de 15’ com turnos de fala e acordos de convivência.",
+      mid: "Padronize rituais de comunicação: check-ins de alinhamento e feedbacks com foco em comportamento observável."
+    },
+    3: {
+      low: "Treine regulação emocional: respiração box, pausa de 90 segundos antes de responder e nomeação de emoções (‘sinto X, porque Y’).",
+      mid: "Antecipe gatilhos emocionais: prepare frases-ponte (‘me dê 1 minuto para organizar a ideia’) e valide percepções com a equipe."
+    },
+    4: {
+      low: "Aprimore comunicação empática: resuma o que ouviu antes de propor, use perguntas abertas e defina ‘próximos passos’ explícitos.",
+      mid: "Use ESCUTA-RESUMO-ACORDO: sintetize pontos-chave e feche com um micro-plano registrado."
+    },
+    5: {
+      low: "Estruture decisões sob pressão: use uma matriz impacto × risco em 5 minutos; valide com 1 pessoa crítica antes de anunciar.",
+      mid: "Crie um ‘checklist de 3 itens’ para decisões rápidas: evidência, risco reversível e teste controlado."
+    },
+    6: {
+      low: "Conecte soft skills à inovação: faça sessões de brainstorming com regras de escuta e documentação de aprendizados pós-teste.",
+      mid: "Ajuste o processo de ideia→teste: critérios de aceitação claros e retrospectivas com foco no aprendizado humano."
+    },
+    7: {
+      low: "Aplique ferramentas de autoconhecimento: diário de bordo, teste VIA ou Big Five e um plano de 30 dias com uma habilidade foco.",
+      mid: "Escolha 1 soft skill foco por 2 semanas e acompanhe 3 indicadores de comportamento observável."
+    }
+  };
+  return base[k]?.[nivel] ?? "Aprimore a consistência com pequenos experimentos semanais e retrospectivas breves.";
 }
 
 function finalizar(){
@@ -595,87 +683,92 @@ function avaliarResumoGeral(d){
 
 function renderFeedback(){
   const d = estado.diag || calcularDiagnostico();
-  const chips = Object.keys(objetivos).map(k=>{
-    const classe = d.tags[k]==="ok" ? "ok" : d.tags[k]==="low" ? "low" : "mid";
-    const rotulo = d.tags[k]==="ok" ? "Alto" : d.tags[k]==="low" ? "Baixo" : "Médio";
-    return `<span class="pill ${classe}" title="Média ${d.medias[k]}">${k}. ${rotulo}</span>`;
+
+  // Tabela sem linhas — Critério | Nota média | Nível
+  const linhasTabela = Object.keys(objetivos).map(k=>{
+    const nivelKey = d.tags[k]; // ok | mid | low
+    const nivelLabel = nivelKey==="ok"?"Alto":nivelKey==="low"?"Baixo":"Médio";
+    const classe = nivelKey==="ok"?"ok":nivelKey==="low"?"low":"mid";
+    return `
+      <tr>
+        <td>${k}. ${objetivos[k]}</td>
+        <td><strong>${d.medias[k].toFixed(2)}</strong></td>
+        <td><span class="lvl ${classe}">${nivelLabel}</span></td>
+      </tr>
+    `;
   }).join("");
 
-  const tabela = Object.keys(objetivos).map(k=>`
-    <li>
-      <strong>${k}. ${objetivos[k]}</strong><br>
-      <small>Média: <b>${d.medias[k].toFixed(2)}</b> • Nível: ${d.tags[k]==="ok"?"Alto":d.tags[k]==="low"?"Baixo":"Médio"}</small>
-    </li>
-  `).join("");
-
+  // Pontos fortes
   const pontosFortes = d.pontosFortes.length
     ? d.pontosFortes.map(k=>`<li>${objetivos[k]}</li>`).join("")
-    : `<li>—</li>`;
+    : `<li>Não há indicações</li>`;
 
-  const oportunidades = d.oportunidades.length
-    ? d.oportunidades.map(k=>`<li>${objetivos[k]}</li>`).join("")
-    : `<li>—</li>`;
-
-  const recos = d.recomenda.map(r=>{
-    if(r.obj===0) return `<li>${r.texto}</li>`;
-    return `<li><strong>${r.obj}. ${objetivos[r.obj]}:</strong> ${r.texto}</li>`;
-  }).join("");
+  // Oportunidades (inclui Médio + Baixo)
+  const oportunidades = d.oportunidadesDetalhadas.length
+    ? d.oportunidadesDetalhadas.map(x=>`<li><strong>${x.k}. ${objetivos[x.k]} (${x.nivel})</strong>: ${x.texto}</li>`).join("")
+    : `<li>Não há indicações</li>`;
 
   const resumoGeral = avaliarResumoGeral(d);
 
   const html = `
     <section class="view-feedback">
       <div class="hero">
-        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="" />
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="">
         <span class="badge">Relatório</span>
-        <h2>📊 Relatório de Feedback do Jogo: Missão Empreendedora – Decida com Coragem</h2>
+        <h2>📊 Relatório do Jogo: Missão Empreendedora – Decida com Coragem</h2>
       </div>
 
       <div class="feedback">
-        <div class="grid">
+        <div class="stack">
+          <!-- 1. Diagnóstico geral (título atualizado + tabela) -->
           <div class="box">
-            <h3>🎯 1. Diagnóstico Geral</h3>
+            <h3>🎯 1. Diagnóstico geral</h3>
             <p>${resumoGeral}</p>
-            <div>${chips}</div>
+            <table class="table-clean" aria-label="Tabela de critérios com nota média e nível">
+              <thead>
+                <tr>
+                  <th>Critério</th>
+                  <th>Nota média</th>
+                  <th>Nível</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${linhasTabela}
+              </tbody>
+            </table>
           </div>
-          <div class="box">
-            <h3>Visão por objetivo</h3>
-            <ul>${tabela}</ul>
-          </div>
-        </div>
 
-        <div class="grid">
-          <div class="box">
-            <h3>✅ 2. Pontos Fortes Identificados</h3>
-            <ul>${pontosFortes}</ul>
+          <div class="grid">
+            <div class="box">
+              <h3>✅ 2. Pontos Fortes Identificados</h3>
+              <ul>${pontosFortes}</ul>
+            </div>
+            <div class="box">
+              <h3>🔍 3. Oportunidades de Desenvolvimento</h3>
+              <ul>${oportunidades}</ul>
+            </div>
           </div>
+
+          <!-- 4. Recomendações padronizadas -->
           <div class="box">
-            <h3>🔍 3. Oportunidades de Desenvolvimento</h3>
-            <ul>${oportunidades}</ul>
+            <h3>💡 4. Recomendações</h3>
+            <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você analise desafios reais relacionados ao comportamento empreendedor. Aproveite os feedbacks indicados como ponto departida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a).</p>
+
+            <p><strong>Recomendações finais:</strong></p>
+            <ul class="checklist">
+              <li>Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.</li>
+              <li>Refaça o jogo selecionando alternativas diferentes para observar reações distintas.</li>
+              <li>Acesse os materiais complementares na UDA para aprofundar seus conhecimentos.</li>
+              <li>Registre suas percepções e construa um plano pessoal de melhoria em soft skills.</li>
+            </ul>
+            <p>Até a próxima!</p>
           </div>
-        </div>
-
-        <div class="box">
-          <h3>💡 4. Recomendações Personalizadas</h3>
-          <ul class="checklist">
-            ${recos}
-            <li>Refaça o jogo selecionando alternativas diferentes para observar reações distintas.</li>
-            <li>Acesse os materiais complementares na UDA (autoconhecimento, vídeos de tomada de decisão).</li>
-            <li>Registre percepções no diário de bordo e construa um plano pessoal de melhoria em soft skills.</li>
-            <li>Converse com colegas e tutores para trocar experiências sobre as decisões e implicações práticas.</li>
-          </ul>
-        </div>
-
-        <div class="box">
-          <h3>📝 5. Conclusão</h3>
-          <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você vivencie, na prática, desafios do comportamento empreendedor. Aproveite os feedbacks como ponto de partida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a). Continue explorando, errando, acertando e aprendendo — esse é o espírito que transforma realidades.</p>
         </div>
       </div>
 
       <div class="footer">
         <div>
           <button class="btn secondary" onclick="window.print()" type="button">🖨 Imprimir / Salvar PDF</button>
-          <button class="btn secondary" onclick="baixarJSON()" type="button">⬇ Baixar resultados (.json)</button>
         </div>
         <div>
           <button class="btn" onclick="refazer()" type="button">🔁 Refazer</button>
@@ -687,23 +780,6 @@ function renderFeedback(){
 }
 
 function refazer(){ onReset(); }
-function baixarJSON(){
-  const payload = {
-    timestamp: new Date().toISOString(),
-    respostas: estado.respostas,
-    diagnostico: estado.diag || calcularDiagnostico(),
-    objetivos
-  };
-  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "missao-empreendedora-resultados.json";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
 
 /* Inicialização por etapa */
 if(estado.etapa==='feedback'){ renderFeedback(); }
