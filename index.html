@@ -3,20 +3,22 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Missão Empreendedora</title>
+<title>Missão Empreendedora – Decida com Coragem</title>
 <meta name="description" content="Jogo gamificado sobre comportamento empreendedor e soft skills." />
 <style>
   :root{
     --azul:#0b2a4a;
     --azul-2:#12375e;
     --laranja:#ff7a00;
+    --laranja-2:#ffa24a;
     --branco:#ffffff;
     --cinza:#f3f5f7;
     --cinza-2:#d7dde3;
     --texto:#0d1b2a;
-    --ok:#10b981;
-    --warn-dark:#a16207;
-    --risk-dark:#7f1d1d;
+    --neutro:#748cab;
+    --ok:#10b981;         /* Verde (Alto) */
+    --warn-dark:#a16207;  /* Amarelo escuro (Médio) */
+    --risk-dark:#7f1d1d;  /* Vermelho escuro (Baixo) */
     --radius:14px;
     --shadow:0 10px 30px rgba(11,42,74,0.15);
   }
@@ -27,7 +29,7 @@
     font:16px/1.5 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     color:var(--texto);
     background:linear-gradient(180deg,#0b2a4a 0%,#0b2a4a 35%,#f6f9fc 35%,#f6f9fc 100%);
-    overflow-x:hidden;
+    overflow-x:hidden; /* evita scroll horizontal eventual no mobile */
   }
   .app{
     max-width:960px;
@@ -42,9 +44,8 @@
     width:42px;height:42px;border-radius:10px;background:var(--laranja);
     display:grid;place-items:center;color:var(--branco);font-weight:800;box-shadow:var(--shadow)
   }
-  /* Título no topo MAIOR */
-  .title h1{margin:0;font-size:1.95rem;line-height:1.15}
-  .title p{margin:4px 0 0;color:#e2e8f0;font-size:1rem}
+  .title h1{margin:0;font-size:1.4rem}
+  .title p{margin:4px 0 0;color:#e2e8f0;font-size:.95rem}
   .card{
     background:var(--branco);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
   }
@@ -90,7 +91,7 @@
     border:1px solid var(--cinza-2);border-radius:12px;padding:12px;background:#fff;transition:transform .2s ease, box-shadow .2s ease;
   }
   .afirmativa:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(18,55,94,.08)}
-  .afirmativa p{margin:0 0 10px; overflow-wrap:anywhere;}
+  .afirmativa p{margin:0 0 10px; overflow-wrap:anywhere;} /* ajuda a quebrar textos longos */
 
   /* ====== Escala ====== */
   .likert{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -119,7 +120,7 @@
   .scale label small{
     position:static;
     font-weight:500;color:#64748b;font-size:.72rem;line-height:1.15;text-align:center;
-    white-space:normal; word-break:break-word;
+    white-space:normal; word-break:break-word; /* quebra “Concordo totalmente” */
   }
   .scale input:checked + label{
     border-color:var(--laranja);
@@ -131,8 +132,10 @@
     outline:3px solid #ffb56b; outline-offset:2px;
   }
 
+  .legenda { display:none !important; }
+
   .progress{ margin:14px 0 0;background:#e2e8f0;height:10px;border-radius:999px;overflow:hidden }
-  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff7a00,#ff9d40);transition:width .4s ease}
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--laranja),#ff9d40);transition:width .4s ease}
 
   .footer{
     display:flex;justify-content:space-between;gap:10px;padding:14px;background:#fff;border-top:1px solid #e5e7eb;border-radius:0 0 var(--radius) var(--radius)
@@ -140,67 +143,76 @@
   .btn{
     appearance:none;border:0;background:var(--azul);color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer;
     display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 22px rgba(11,42,74,.2);transition:transform .15s ease, filter .15s ease;
-    min-height:44px;
+    min-height:44px; /* altura uniforme */
   }
   .btn.secondary{background:#fff;color:var(--azul);border:1px solid var(--cinza-2);box-shadow:none}
-  .btn.warn{background:#ff7a00}
+  .btn.warn{background:var(--laranja)}
   .btn:disabled{opacity:.6;cursor:not-allowed;filter:grayscale(.2)}
 
-  /* ======== FORMATAÇÕES SOLICITADAS NA PRIMEIRA PÁGINA ======== */
-  .cover { display:flex;flex-direction:column;gap:12px;padding:18px;background:#fff; }
-  .cover p{ margin:8px 0; }              /* Menor espaçamento entre parágrafos */
-  .cover ul{ margin:8px 0 0 1.2rem; }
-
-  /* Frases centrais sem fundo, azul, mesma fonte, apenas maiores */
-  .emphasis-center{
-    text-align:center;
-    color:var(--azul);
-    font-size:1.15rem;
-    font-weight:400;
-  }
-  /* “Bem-vindo(a)!” à esquerda, azul, maior, sem fundo */
-  .emphasis-left{
-    text-align:left;
-    color:var(--azul);
-    font-size:1.2rem;
-    font-weight:400;
-  }
-  /* Botão “Começar” bem maior e chamativo no final da capa */
-  #btn-comecar{
-    font-size:1.3rem;
-    padding:18px 28px;
-    background:linear-gradient(180deg,#0b2a4a 0%, #12375e 100%);
-    box-shadow:0 16px 32px rgba(11,42,74,.28);
-    border-radius:14px;
-  }
-
-  /* Capa hero */
-  .cover-hero{
-    position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
-  }
-  .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;pointer-events:none}
-  .cover-title{position:relative}
-  .cover-title h2{margin:0;font-size:1.8rem}
-  .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5;font-weight:400}
-
-  /* Animações e responsividade */
   .fade-enter{opacity:0;transform:translateY(8px)}
   .fade-enter-active{opacity:1;transform:none;transition:all .35s ease}
   .fade-exit{opacity:1;transform:none}
   .fade-exit-active{opacity:0;transform:translateY(-8px);transition:all .25s ease}
 
   .feedback{padding:18px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;margin:4px 6px 0 0}
+  .pill.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+  .pill.mid{background:#fff7ed;color:var(--warn-dark);border:1px solid #fed7aa}
+  .pill.low{background:#fef2f2;color:var(--risk-dark);border:1px solid #fecaca}
+
+  .feedback .stack { display:flex; flex-direction:column; gap:22px; }
   .grid{display:grid;grid-template-columns:1fr;gap:22px}
   @media (min-width:860px){ .grid{grid-template-columns:1fr 1fr} }
   .box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
 
+  .table-clean{ width:100%; border-collapse:separate; border-spacing:0 6px; }
+  .table-clean thead th{ text-align:left; font-weight:800; color:#334155; font-size:.92rem; padding:6px 8px; }
+  .table-clean tbody td{ background:#fff; padding:10px 8px; vertical-align:middle; }
+  .table-clean tbody tr{ box-shadow:0 1px 0 #e5e7eb inset, 0 -1px 0 #e5e7eb inset; border-radius:8px; }
+
+  .lvl{ display:inline-flex;align-items:center;font-weight:700;padding:4px 8px;border-radius:999px;font-size:.82rem }
+  .lvl.ok{ background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+  .lvl.mid{ background:#fff7ed; color:var(--warn-dark); border:1px solid #fed7aa; }
+  .lvl.low{ background:#fef2f2; color:var(--risk-dark); border:1px solid #fecaca; }
+
+  .checklist li{margin:8px 0}
+
+  /* Impressão */
   @media print{
     header, .footer, .progress, .btn, .logo { display:none !important; }
     body{background:#fff}
     .card{box-shadow:none;border:0}
   }
 
-  /* Botões no mobile */
+  /* ===== CAPA & INTRO ===== */
+  .cover, .intro { display:flex;flex-direction:column;gap:16px;padding:18px;background:#fff; }
+  .cover-hero{
+    position:relative;height:260px;background:#0b2a4a;border-radius:12px;overflow:hidden;display:flex;align-items:flex-end;padding:18px;color:#fff
+  }
+  .cover-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;pointer-events:none}
+  .cover-title{position:relative}
+  .cover-title h2{margin:0;font-size:1.8rem}
+  .cover-title p{margin:6px 0 0;font-size:1.05rem;color:#e6edf5}
+
+  .intro h3{margin:0 0 6px}
+  .intro p{margin:6px 0}
+  .intro ul{margin:6px 0 0 1.2rem}
+
+  /* ====================== RESPONSIVIDADE ====================== */
+  /* 1) Likert: empilha no mobile */
+  @media (max-width: 640px){ .scale{ grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px){
+    .likert{ gap:8px; align-items:stretch; }
+    .scale{ grid-template-columns: 1fr; min-width:0; width:100%; }
+    .scale label{ align-items:flex-start; text-align:left; padding:10px 12px; }
+    .scale label small{ white-space:normal; word-break:break-word; }
+  }
+  @media (max-width: 420px){
+    .scale label{ font-size:.88rem; }
+    .scale label small{ font-size:.70rem; }
+  }
+
+  /* 2) Botões: padroniza no mobile */
   .footer > div{ display:flex; gap:10px; flex-wrap:wrap; }
   @media (max-width:560px){
     .footer{ flex-direction:column; align-items:stretch; }
@@ -210,12 +222,12 @@
 </style>
 </head>
 <body>
-<div class="app" role="application" aria-label="Missão Empreendedora">
+<div class="app" role="application" aria-label="Missão Empreendedora – Decida com Coragem">
   <header>
     <div class="logo" aria-hidden="true">ME</div>
     <div class="title">
-      <h1>Missão Empreendedora</h1>
-      <p>UDA • Comportamento Empreendedor e Soft Skills • PUC Minas</p>
+      <h1>Missão Empreendedora – Decida com Coragem</h1>
+      <p>Comportamento Empreendedor e Soft Skills • UDA PUC Minas Virtual</p>
     </div>
   </header>
 
@@ -231,9 +243,6 @@ const PALETA = { azul:"#0b2a4a", laranja:"#ff7a00", branco:"#ffffff" };
 
 // Fallback padrão de imagem (caso a original falhe)
 const IMG_FALLBACK = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80";
-
-/* Nova imagem para o cenário 5 (pessoa usando chatbot) */
-const IMG_CHATBOT = "https://images.unsplash.com/photo-1611162618071-b39a2ecf2e48?auto=format&fit=crop&w=1600&q=80";
 
 const cenarios = [
   {
@@ -278,7 +287,8 @@ const cenarios = [
   },
   {
     titulo: "Cenário 5: O Algoritmo Injusto",
-    imagem: IMG_CHATBOT,
+    /* Imagem substituída por uma opção estável que remete a IA/chatbot */
+    imagem: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1600&q=80",
     narrativa: "Seu sistema de automação de atendimento digital começa a gerar reclamações por respostas impessoais. Seu sócio propõe manter o sistema assim para reduzir custos, mas você tem dúvidas éticas.",
     afirmativas: [
       { texto: "Considerei o impacto humano antes de apoiar o uso do sistema automatizado.", objetivos: [1,2] },
@@ -288,10 +298,9 @@ const cenarios = [
   }
 ];
 
-/* Critérios (já atualizados em versão anterior e mantidos) */
 const objetivos = {
-  1: "Comportamento empreendedor e criação de valor",
-  2: "Aplicação de soft skills no desempenho profissional",
+  1: "Fundamentos do comportamento empreendedor e criação de valor",
+  2: "Importância e aplicação de soft skills no desempenho profissional",
   3: "Inteligência emocional aplicada à liderança e gestão",
   4: "Comunicação empática e assertiva em trabalho em equipe",
   5: "Decisão sob pressão com aspectos emocionais e estratégicos",
@@ -302,8 +311,8 @@ const objetivos = {
 // Estado & Persistência
 const STORAGE_KEY = "missaoEmpreendedora_v3";
 let estado = {
-  etapa: 'capa', // 'capa' | 'jogo' | 'feedback'
-  atual: 0,
+  etapa: 'capa', // 'capa' | 'intro' | 'jogo' | 'feedback'
+  atual: 0, // índice do cenário
   respostas: Array.from({length: cenarios.length}, () => [null, null, null]),
   finalizado: false,
   diag: null
@@ -321,7 +330,7 @@ function carregarEstado(){
     if(data.diag) estado.diag = data.diag;
 
     if(estado.finalizado) estado.etapa = 'feedback';
-    else if(!['capa','jogo'].includes(estado.etapa)) estado.etapa = 'capa';
+    else if(!['capa','intro','jogo'].includes(estado.etapa)) estado.etapa = 'capa';
   }catch(e){}
 }
 function salvarEstado(){
@@ -329,7 +338,9 @@ function salvarEstado(){
 }
 carregarEstado();
 
-/* Auto-resize para iframe */
+/* ======================
+   Auto-resize para iframe
+   ====================== */
 function docHeight(){
   const b=document.body, d=document.documentElement;
   return Math.max(b.scrollHeight,d.scrollHeight,b.offsetHeight,d.offsetHeight,b.clientHeight,d.clientHeight);
@@ -351,8 +362,11 @@ function sendHeightToParent(){
   });
 })();
 
-/* Renderização */
-const root = document.getElementById("root"); // <— única declaração
+/* ==============
+   Renderização
+   ============== */
+const root = document.getElementById("root");
+function $(sel, ctx=document){ return ctx.querySelector(sel); }
 
 function animateSwap(html){
   const node = document.createElement("div");
@@ -361,7 +375,7 @@ function animateSwap(html){
   if(!root.firstChild){
     root.appendChild(next);
     requestAnimationFrame(()=>next.classList.add("fade-enter-active"));
-    requestAnimationFrame(sendHeightToParent);
+    requestAnimationFrame(sendHeightToParent); // informa o host
     return;
   }
   const current = root.firstChild;
@@ -372,7 +386,7 @@ function animateSwap(html){
     requestAnimationFrame(()=>{
       next.classList.add("fade-enter-active");
       next.classList.remove("fade-enter");
-      requestAnimationFrame(sendHeightToParent);
+      requestAnimationFrame(sendHeightToParent); // informa o host
     });
   }, 200);
 }
@@ -387,35 +401,52 @@ function renderCapa(){
                alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
           <div class="cover-title">
             <h2>Missão Empreendedora</h2>
-            <p>Decida com coragem e descubra seu perfil empreendedor</p>
+            <p>Descobrir seu perfil empreendedor</p>
           </div>
         </div>
-
-        <p class="emphasis-left">Bem-vindo(a)!</p>
-
-        <p>Você está prestes a entrar em uma experiência imersiva, vivenciando desafios do comportamento empreendedor em um ambiente seguro e reflexivo.</p>
-        <p>Serão apresentados cinco cenários com situações reais do mundo empreendedor envolvendo dilemas, tensões, oportunidades, conflitos e momentos de decisão sob pressão. Para cada cenário, terão afirmativas relacionadas a como você agiria naquela situação e você indicará seu nível de concordância com cada uma delas, do “discordo totalmente” ao “concordo totalmente”.</p>
-
-        <p class="emphasis-center">Não existe resposta certa ou errada!</p>
-        <p>O objetivo é diagnosticar seu estilo, reconhecer suas forças e identificar oportunidades de desenvolvimento.</p>
-
-        <p>Durante esse percurso, você explorará aspectos essenciais como:</p>
-        <ul>
-          <li>inteligência emocional</li>
-          <li>comunicação assertiva</li>
-          <li>liderança empática</li>
-          <li>resiliência</li>
-          <li>tomada de decisão em cenários incertos</li>
-          <li>papel das soft skills no comportamento empreendedor.</li>
-        </ul>
-
-        <p class="emphasis-center">Pronto(a) para avançar e conhecer sua própria forma de empreender?</p>
+        <p>Bem-vindo(a)! Este jogo foi pensado para você vivenciar desafios do comportamento empreendedor em um ambiente seguro e reflexivo.</p>
       </div>
-
       <div class="footer">
         <div></div>
         <div>
           <button class="btn" id="btn-comecar" type="button">Começar</button>
+        </div>
+      </div>
+    </section>
+  `;
+  animateSwap(html);
+}
+
+/* ====== INTRODUÇÃO ====== */
+function renderIntro(){
+  const texto = `
+  <p>Você está prestes a entrar em uma experiência imersiva, onde cada escolha conta e cada decisão revela um pouco mais sobre o seu próprio empreendedor.</p>
+  <p>No O jogo Missão empreendedora, você encontrará cinco cenários com situações reais do mundo empreendedor: dilemas, tensões, oportunidades, conflitos e momentos de decisão sob pressão. Para cenário, terão afirmativas relacionadas a como você agiria naquela situação e você indicará seu nível de concordância com cada uma delas, “discordo totalmente” ao “concordo totalmente”.</p>
+  <p>Não existe resposta certa ou errada.<br>
+  O objetivo é diagnosticar seu estilo, reconhecer suas forças e identificar áreas de desenvolvimento.</p>
+  <p>Durante esse percurso, você explorará aspectos essenciais como:</p>
+  <ul>
+    <li>inteligência emocional,</li>
+    <li>comunicação assertiva,</li>
+    <li>liderança empática,</li>
+    <li>resiliência,</li>
+    <li>tomada de decisão em cenários incertos,</li>
+    <li>e o papel das soft skills no comportamento empreendedor.</li>
+  </ul>
+  <p><strong>Pronto(a) para avançar e conhecer sua própria forma de empreender?</strong></p>
+  `;
+  const html = `
+    <section class="view-intro">
+      <div class="intro">
+        <h3>Como funciona</h3>
+        ${texto}
+      </div>
+      <div class="footer">
+        <div>
+          <button class="btn secondary" id="btn-voltar-capa" type="button">Voltar</button>
+        </div>
+        <div>
+          <button class="btn" id="btn-avancar-intro" type="button">Avançar</button>
         </div>
       </div>
     </section>
@@ -430,7 +461,8 @@ function renderCenario(idx){
   const html = `
     <article class="view-cenario">
       <div class="hero">
-        <img src="${c.imagem}" alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
+        <img src="${c.imagem}" alt=""
+             onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
         <span class="badge">${idx+1} / ${cenarios.length}</span>
         <h2>${c.titulo}</h2>
       </div>
@@ -514,6 +546,8 @@ root.addEventListener("change", (e)=>{
         if(btnAvancar && isCenarioCompleto(ci)) btnAvancar.disabled = false;
         if(btnFinalizar && isCenarioCompleto(ci)) btnFinalizar.disabled = false;
       }
+
+      // pode alterar a altura -> notifica o host
       requestAnimationFrame(sendHeightToParent);
     }
   }
@@ -525,14 +559,25 @@ root.addEventListener("click", (e) => {
 
   switch (btn.id) {
     case "btn-comecar":
-      // Vai direto para o jogo (página "Como funciona" foi removida anteriormente)
+      estado.etapa = "intro";
+      salvarEstado();
+      renderIntro();
+      break;
+
+    case "btn-voltar-capa":
+      estado.etapa = "capa";
+      salvarEstado();
+      renderCapa();
+      break;
+
+    case "btn-avancar-intro":
       estado.etapa = "jogo";
       estado.atual = 0;
       salvarEstado();
       renderCenario(0);
       break;
 
-  case "btn-voltar":
+    case "btn-voltar":
       onPrev();
       break;
 
@@ -546,6 +591,9 @@ root.addEventListener("click", (e) => {
 
     case "btn-finalizar":
       finalizar();
+      break;
+
+    default:
       break;
   }
 });
@@ -696,7 +744,7 @@ function renderFeedback(){
         <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1600&q=80"
              alt="" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" />
         <span class="badge">Relatório</span>
-        <h2>📊 Relatório do Jogo: Missão Empreendedora</h2>
+        <h2>📊 Relatório do Jogo: Missão Empreendedora – Decida com Coragem</h2>
       </div>
 
       <div class="feedback">
@@ -731,7 +779,8 @@ function renderFeedback(){
 
           <div class="box">
             <h3>💡 4. Recomendações</h3>
-            <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você analise desafios reais relacionados ao comportamento empreendedor. Aproveite os feedbacks indicados como ponto de partida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a).</p>
+            <p>O jogo <em>'Missão Empreendedora'</em> foi desenvolvido para que você analise desafios reais relacionados ao comportamento empreendedor. Aproveite os feedbacks indicados como ponto departida para se desenvolver como um(a) profissional protagonista, ético(a) e inovador(a).</p>
+            <p><strong>Recomendações finais:</strong></p>
             <ul class="checklist">
               <li>Experimente refazer o jogo buscando respostas menos intuitivas para explorar vieses e ampliar repertório.</li>
               <li>Refaça o jogo selecionando alternativas diferentes para observar reações distintas.</li>
@@ -761,8 +810,8 @@ function refazer(){ onReset(); }
 /* Inicialização por etapa */
 if(estado.etapa==='feedback'){ renderFeedback(); }
 else if(estado.etapa==='jogo'){ renderCenario(estado.atual); }
+else if(estado.etapa==='intro'){ renderIntro(); }
 else { renderCapa(); }
 </script>
 </body>
 </html>
-
